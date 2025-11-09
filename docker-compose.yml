@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  phishing-demo:
+    build: .
+    container_name: phishing-demo
+    ports:
+      - "9999:9999"
+    environment:
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-ACa04f0a6b8fa61385b3deca4482c548dc}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-7988ea84cc6be05403cbdf0635b93f04}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-cat}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-meowmeow}
+      - SECRET_KEY=${SECRET_KEY:-14788A42FAEA3A400ACDEB416690E04916D7E82847F3EA107A81F492CF1D62F0}
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
