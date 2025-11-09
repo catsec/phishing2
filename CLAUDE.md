@@ -54,8 +54,12 @@ python phishing_demo.py
 export SECRET_KEY="your-secret-key"
 export TWILIO_ACCOUNT_SID="your-twilio-sid"
 export TWILIO_AUTH_TOKEN="your-twilio-token"
+export DEFAULT_FROM_NUMBER="Cal"
+export DEFAULT_SMS_MESSAGE="Your default SMS message text here"
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="password"
+export PORT="9999"
+export FLASK_DEBUG="false"
 ```
 
 ### Building & Deployment
@@ -76,8 +80,9 @@ docker-compose up
 **Note:** No automated test framework is currently configured. Manual testing is required:
 - Access the phishing form at `http://localhost:9999/`
 - Submit test credit card data
-- Access the attacker control panel at `http://localhost:9999/hacker`
-- Verify SMS functionality if Twilio credentials are configured
+- Access the unified control panel at `http://localhost:9999/hacker` (login required)
+- Test SMS sending functionality from the control panel (requires valid Twilio credentials)
+- Verify captured data display and flow control buttons work correctly
 
 ## Architecture & Code Structure
 
@@ -95,15 +100,14 @@ The entire application is contained in `phishing_demo.py` (1,267 lines) with the
 
 #### Control Panel - Attacker Interface
 - **Login** (`/login`) - Authentication page for accessing restricted areas
-- **Dashboard** (`/hacker`) - HTML dashboard displaying captured data (requires authentication)
+- **Dashboard** (`/hacker`) - Unified control panel with SMS sending, captured data display, and flow control (requires authentication)
 - **Data API** (`/hacker/data`) - JSON endpoint returning captured card and OTP data
 - **Continue Control** (`/hacker/continue`) - Allows attacker to advance victim through phishing flow
 - **Clear Data** (`/hacker/clear`) - Clears captured data and resets for new demo
 - **Logout** (`/logout`) - Clears user session and redirects to login
 
 #### Additional Endpoints
-- **SMS Interface** (`/sms`) - Web interface for sending SMS messages via Twilio (requires authentication)
-- **SMS API** (`/send`) - Backend endpoint for SMS submission (requires authentication)
+- **SMS API** (`/send`) - Backend endpoint for SMS submission (requires authentication, used by hacker dashboard)
 - **Logo** (`/logo.png`) - Serves static image asset
 
 ### Data Capture & Storage
@@ -136,39 +140,63 @@ captured_data = {
 ### Configuration
 
 **Environment Variables (ALL REQUIRED):**
-- `TWILIO_ACCOUNT_SID` - Twilio account identifier (required, no default)
-- `TWILIO_AUTH_TOKEN` - Twilio authentication token (required, no default)
-- `ADMIN_USERNAME` - Username for admin login (required, no default)
-- `ADMIN_PASSWORD` - Password for admin login (required, no default)
-- `SECRET_KEY` - Flask session secret key for security (required, no default)
+- `SECRET_KEY` - Flask session secret key for security
+- `TWILIO_ACCOUNT_SID` - Twilio account identifier
+- `TWILIO_AUTH_TOKEN` - Twilio authentication token
+- `DEFAULT_FROM_NUMBER` - Default "from" number for SMS sender (e.g., "Cal" or "+1234567890")
+- `DEFAULT_SMS_MESSAGE` - Default SMS message text to pre-populate in the SMS sender interface
+- `ADMIN_USERNAME` - Username for admin login
+- `ADMIN_PASSWORD` - Password for admin login
+- `PORT` - Port to run the application on (e.g., "9999")
+- `FLASK_DEBUG` - Enable Flask debug mode ("true" or "false")
 
-**Note:** The application will fail to start if any required environment variable is missing. See `docker-compose.yml` for example values used in Docker deployments.
-
-**Port Configuration:**
-- Default port: `9999` (configured in `docker-compose.yml` and `Dockerfile`)
+**Important:** The application will fail to start with a clear error message if ANY environment variable is missing or invalid. There are no default values. See `docker-compose.yml` for example configuration.
 
 ### Authentication
 
-The `/hacker` and `/sms` endpoints are protected with session-based authentication:
+The `/hacker` and `/send` endpoints are protected with session-based authentication:
 - Users must login at `/login` with valid credentials
 - Session tokens are stored in Flask sessions (requires `SECRET_KEY`)
 - Users can logout at `/logout` which clears the session
 - Authentication is enforced via the `@require_auth` decorator on protected routes
 
+### Hacker Dashboard Layout
+
+The unified control panel at `/hacker` integrates all attacker functionality in a single interface:
+
+**Layout Structure (top to bottom):**
+1. **Header** - Title and logout button with warning banner
+2. **SMS Sender Panel** - Form for sending phishing SMS messages via Twilio
+   - From/To number fields (supports E.164 format and alphanumeric sender IDs)
+   - Message textarea with character counter (1600 char limit)
+   - Send button with success/error feedback
+3. **Credit Card Capture Panel** - Displays stolen credit card data
+   - Cardholder name, card number, expiry, CVV
+   - Timestamp of capture
+4. **OTP Capture Panel** - Displays stolen OTP codes
+   - 6-digit OTP code
+   - Timestamp of capture
+5. **Flow Control Panel** - Buttons to control victim progression
+   - "Continue to Transaction Alert" - advances victim to next phishing stage
+   - "Clear Data" - resets all captured data for new demo
+   - Auto-refresh status indicator
+
+**Design Theme:** Dark terminal-style interface with green/yellow text on black background, monospace fonts, and matrix-style aesthetic.
+
 ### HTML & JavaScript Templates
 
-The application includes embedded HTML/JavaScript within Python strings for:
+The application uses Jinja2 templates in the `templates/` directory:
 - Phishing form page with card input validation (Luhn algorithm for credit cards)
 - Hebrew-RTL layout for realistic Hebrew banking interface
-- Attacker control dashboard with real-time data display
+- Unified hacker dashboard with SMS sending and real-time data display
 - Client-side form validation using JavaScript regex patterns
 
-**Important:** When editing JavaScript code within Python template strings, escape backslashes in regex patterns (e.g., `\\D` instead of `\D`) to avoid Python syntax warnings.
+**Important:** When editing JavaScript code within template files, escape backslashes in regex patterns (e.g., `\\D` instead of `\D`) to avoid syntax issues.
 
 ## Security Considerations & Limitations
 
 **Implemented Security Features:**
-- Session-based authentication on `/hacker` and `/sms` endpoints
+- Session-based authentication on `/hacker`, `/hacker/data`, `/hacker/continue`, `/hacker/clear`, and `/send` endpoints
 - Login page with username/password validation
 - Logout functionality to clear sessions
 - Configurable admin credentials via environment variables (no hardcoded defaults)
@@ -176,7 +204,16 @@ The application includes embedded HTML/JavaScript within Python strings for:
 - XSS prevention via input sanitization (`html.escape()`) and safe DOM manipulation
 - Security headers: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection
 - All credentials required from environment variables (fail loudly if missing)
-- No sensitive data logged to console
+- Thread-safe state management using locks to prevent race conditions
+- Server-side input validation for:
+  - Credit card numbers (13-19 digits, format validation)
+  - CVV codes (3-4 digits)
+  - Expiry dates (MM/YY format)
+  - OTP codes (6 digits)
+  - Phone numbers (E.164 format for SMS)
+  - Message lengths (Twilio 1600 char limit)
+- Comprehensive error handling with generic error messages (detailed errors logged server-side only)
+- Input length limits to prevent memory exhaustion attacks
 
 **Design Considerations:**
 - HTTPS/TLS encryption: Handled by reverse proxy (application assumes HTTPS)
@@ -196,7 +233,9 @@ The application includes embedded HTML/JavaScript within Python strings for:
 ## Development Guidelines
 
 When modifying this application:
-- Keep all HTML/JavaScript templates in the main `phishing_demo.py` file
+- Keep all HTML/JavaScript templates in the `templates/` directory (separated from main Python file)
+- Keep all CSS styles in `static/css/main.css` (unified stylesheet for all pages)
+- DO NOT use emojis or symbols in UI text - use plain text only (e.g., "WARNING:" instead of warning emoji)
 - Maintain Hebrew RTL support for the phishing form
 - Update both Flask routes and corresponding HTML forms together
 - Use proper type hints (imported from `typing` module) for data structures

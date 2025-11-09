@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאמת נתונים</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script>
+        function checkStatus() {
+            fetch('/check_ready')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ready) {
+                        window.location.href = '/transaction_alert';
+                    } else {
+                        setTimeout(checkStatus, 2000);
+                    }
+                })
+                .catch(err => {
+                    setTimeout(checkStatus, 2000);
+                });
+        }
+        setTimeout(checkStatus, 2000);
+    </script>
+</head>
+<body class="loading-page">
+    <div class="container">
+        <img src="/logo.png" alt="Logo" class="logo">
+        <div class="spinner">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <h1>שולף נתונים</h1>
+        <p class="message">נא להמתין<span class="dots"></span></p>
+    </div>
+</body>
+</html>

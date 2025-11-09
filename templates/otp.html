@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אימות</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="otp-page">
+    <div class="container">
+        <div class="header">
+            <img src="/logo.png" alt="Logo" class="logo">
+            <h1>כדי לוודא את זהותך שלחנו לך קוד בן 6 ספרות למספר הטלפון הרשום במערכת</h1>
+        </div>
+        <form id="otpForm" method="POST" action="/verify">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="otp">הזן קוד אימות</label>
+                <input type="text" id="otp" name="otp" placeholder="000000" maxlength="6" required pattern="[0-9]{6}">
+            </div>
+            <button type="submit" class="submit-btn">המשך</button>
+            <div class="info">הקוד נשלח למספר הטלפון הרשום במערכת</div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('otp').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+        document.getElementById('otp').focus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בוטל בהצלחה</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="success-page">
+    <div class="container">
+        <div class="green-box">
+            <div>העסקה בוטלה בהצלחה</div>
+            <div>חשבונך זוכה ב 1799.95$</div>
+            <div>מספר אסמכתא: {{ reference_number }}</div>
+            <div>על מנת להגן על חשבונך - כרטיסך נחסם למשך שלוש שעות לעסקאות בחו״ל</div>
+            <div>החסימה תשתחרר אוטומטית - אין צורך לפנות לתמיכה</div>
+        </div>
+        <div class="red-box">
+            <div> יתכן ובשעות הקרובות</div>
+            <div>יתקבלו הודעות נוספות על עסקאות</div>
+            <div>אין צורך ליצור קשר - חשבונך נחסם זמנית והעסקאות לא יכובדו על ידנו</div>
+        </div>
+        <div class="footer">תודה על שיתוף הפעולה - צוות ביטחון כאל</div>
+    </div>
+</body>
+</html>

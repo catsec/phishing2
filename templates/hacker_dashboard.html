@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Control Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="hacker-page">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="header">
+        <h1>PHISHING CONTROL PANEL</h1>
+        <div class="status">WARNING: DEMO MODE - Security Awareness Training</div>
+    </div>
+
+    <div class="container">
+        <!-- SMS Sending Panel -->
+        <div class="panel full-width">
+            <h2>SMS Sender</h2>
+            <form id="smsForm">
+                <div class="sms-row">
+                    <div class="sms-field">
+                        <label for="from">From Number</label>
+                        <input type="tel" id="from" name="from" value="{{ default_from }}" placeholder="+1234567890" required>
+                    </div>
+                    <div class="sms-field">
+                        <label for="to">To Number</label>
+                        <input type="tel" id="to" name="to" value="+9725" placeholder="+9725XXXXXXX" required>
+                    </div>
+                </div>
+                <div class="sms-field">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Enter your message here..." required maxlength="1600">{{ default_sms_message }}</textarea>
+                    <div class="char-count"><span id="charCount">0</span> / 1600</div>
+                </div>
+                <button type="submit" id="sendBtn" class="control-btn">Send SMS</button>
+            </form>
+            <div id="smsAlert" class="sms-alert" style="display: none;"></div>
+        </div>
+
+        <!-- Credit Card Capture Panel -->
+        <div class="panel">
+            <h2>Credit Card Capture</h2>
+            <div id="cardData">
+                <div class="no-data">Waiting for victim...</div>
+            </div>
+        </div>
+
+        <!-- OTP Capture Panel -->
+        <div class="panel">
+            <h2>OTP Capture</h2>
+            <div id="otpData">
+                <div class="no-data">Waiting for OTP...</div>
+            </div>
+        </div>
+
+        <!-- Flow Control Panel -->
+        <div class="panel full-width">
+            <h2>Flow Control</h2>
+            <button id="continueBtn" class="control-btn" disabled>Continue to Transaction Alert</button>
+            <button id="clearBtn" class="control-btn" style="margin-top: 10px;">Clear Data</button>
+            <div class="timestamp" id="lastUpdate">Auto-refresh active...</div>
+        </div>
+    </div>
+
+    <script>
+        let hasCardData = false;
+
+        // SMS Form Handling
+        const smsForm = document.getElementById('smsForm');
+        const smsAlert = document.getElementById('smsAlert');
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+
+        // Character counter - initialize on load
+        charCount.textContent = messageInput.value.length;
+
+        messageInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        function showSmsAlert(message, type) {
+            smsAlert.textContent = message;
+            smsAlert.className = `sms-alert sms-alert-${type}`;
+            smsAlert.style.display = 'block';
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    smsAlert.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        smsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            const formData = new FormData(smsForm);
+            const data = {
+                from: formData.get('from'),
+                to: formData.get('to'),
+                message: formData.get('message')
+            };
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            smsAlert.style.display = 'none';
+
+            try {
+                const response = await fetch('/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showSmsAlert(`SUCCESS: Message sent! SID: ${result.sid}`, 'success');
+                    // Reset form fields but keep default values
+                    document.getElementById('to').value = '+9725';
+                    charCount.textContent = messageInput.value.length;
+                } else {
+                    showSmsAlert(`ERROR: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showSmsAlert(`ERROR: Network error: ${error.message}`, 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send SMS';
+            }
+        });
+
+        // Data Display Functions
+        function createDataRow(label, value) {
+            const div = document.createElement('div');
+            div.className = 'data-row';
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'data-label';
+            labelSpan.textContent = label;
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'data-value';
+            valueSpan.textContent = value;
+            div.appendChild(labelSpan);
+            div.appendChild(valueSpan);
+            return div;
+        }
+
+        function updateDashboard() {
+            fetch('/hacker/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Update card data
+                    if (data.card) {
+                        hasCardData = true;
+                        const cardDataDiv = document.getElementById('cardData');
+                        cardDataDiv.innerHTML = '';
+
+                        cardDataDiv.appendChild(createDataRow('Cardholder:', data.card.cardholder_name));
+                        cardDataDiv.appendChild(createDataRow('Card Number:', data.card.card_number));
+                        cardDataDiv.appendChild(createDataRow('Expiry:', data.card.expiry_date));
+                        cardDataDiv.appendChild(createDataRow('CVV:', data.card.cvv));
+
+                        const timestamp = document.createElement('div');
+                        timestamp.className = 'timestamp';
+                        timestamp.textContent = data.card.timestamp;
+                        cardDataDiv.appendChild(timestamp);
+
+                        const continueBtn = document.getElementById('continueBtn');
+                        continueBtn.disabled = false;
+                        continueBtn.classList.add('flash');
+                    }
+
+                    // Update OTP data
+                    if (data.otp) {
+                        const otpDataDiv = document.getElementById('otpData');
+                        otpDataDiv.innerHTML = '';
+
+                        const otpDiv = document.createElement('div');
+                        otpDiv.className = 'data-row';
+                        const label = document.createElement('span');
+                        label.className = 'data-label';
+                        label.textContent = 'OTP Code:';
+                        const value = document.createElement('span');
+                        value.className = 'data-value';
+                        value.style.fontSize = '24px';
+                        value.style.fontWeight = 'bold';
+                        value.textContent = data.otp.code;
+                        otpDiv.appendChild(label);
+                        otpDiv.appendChild(value);
+                        otpDataDiv.appendChild(otpDiv);
+
+                        const timestamp = document.createElement('div');
+                        timestamp.className = 'timestamp';
+                        timestamp.textContent = data.otp.timestamp;
+                        otpDataDiv.appendChild(timestamp);
+                    }
+
+                    // Update timestamp
+                    document.getElementById('lastUpdate').textContent =
+                        'Last update: ' + new Date().toLocaleTimeString();
+                });
+        }
+
+        // Continue button handler
+        document.getElementById('continueBtn').addEventListener('click', function() {
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            fetch('/hacker/continue', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.remove('flash');
+                        this.textContent = 'SUCCESS: Victim proceeding to transaction alert...';
+                        this.disabled = true;
+                    }
+                });
+        });
+
+        // Clear button handler
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            if (confirm('Clear all captured data and reset for a new demo?')) {
+                const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+                fetch('/hacker/clear', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Reset the UI
+                            document.getElementById('cardData').innerHTML = '<div class="no-data">Waiting for victim...</div>';
+                            document.getElementById('otpData').innerHTML = '<div class="no-data">Waiting for OTP...</div>';
+                            const continueBtn = document.getElementById('continueBtn');
+                            continueBtn.disabled = true;
+                            continueBtn.classList.remove('flash');
+                            continueBtn.textContent = 'Continue to Transaction Alert';
+                        }
+                    });
+            }
+        });
+
+        // Auto-refresh every 2 seconds
+        setInterval(updateDashboard, 2000);
+        updateDashboard();
+    </script>
+</body>
+</html>

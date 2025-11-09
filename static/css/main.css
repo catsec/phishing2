@@ -1,0 +1,856 @@
+/*
+ * Phishing Awareness Training Demo - Main Stylesheet
+ * Consolidated and optimized CSS for all pages
+ */
+
+/* ========================================
+   GLOBAL RESET & BASE STYLES
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ========================================
+   BACKGROUND GRADIENTS
+   ======================================== */
+
+/* Default gradient - purple/blue theme (used by most pages) */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Purple gradient for transaction alert page (same as phishing form) */
+body.alert-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Dark theme for hacker dashboard */
+body.hacker-page {
+    background: #0a0a0a;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* ========================================
+   SHARED CONTAINER STYLES
+   ======================================== */
+
+.container,
+.login-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    padding: 40px;
+}
+
+.container {
+    max-width: 500px;
+}
+
+.login-container {
+    max-width: 400px;
+}
+
+/* Login page terminal theme */
+body.login-page {
+    background: #000000;
+}
+
+body.login-page .login-container {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+body.login-page .header h1 {
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+body.login-page .header p {
+    color: #00ff00;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+}
+
+body.login-page label {
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+body.login-page input {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+body.login-page input:focus {
+    border-color: #00ff00;
+    box-shadow: none;
+}
+
+body.login-page .submit-btn {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+body.login-page .submit-btn:hover {
+    background: #00ff00;
+    color: #000000;
+    transform: none;
+}
+
+body.login-page .warning {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+body.login-page .error {
+    background: #000000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    border-radius: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+/* Loading page specific container */
+body.loading-page .container {
+    padding: 60px 40px;
+    text-align: center;
+    max-width: 450px;
+}
+
+/* ========================================
+   HEADER STYLES
+   ======================================== */
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #666;
+    font-size: 14px;
+}
+
+h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Alert page specific heading */
+body.alert-page h1 {
+    color: #333;
+    font-size: 22px;
+    margin-bottom: 30px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+/* OTP page specific heading */
+body.otp-page h1 {
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+/* ========================================
+   LOGO STYLES
+   ======================================== */
+
+.logo {
+    max-width: 200px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+/* ========================================
+   FORM ELEMENTS
+   ======================================== */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* OTP input specific styles */
+body.otp-page input {
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 8px;
+    direction: ltr;
+}
+
+/* Card inputs - LTR direction */
+.card-row input,
+input#cardNumber,
+input#expiry,
+input#cvv {
+    direction: ltr;
+    text-align: left;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ========================================
+   GRID LAYOUTS
+   ======================================== */
+
+.card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+button,
+.submit-btn,
+.btn {
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.submit-btn,
+.btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.submit-btn:hover,
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Button variations */
+.btn {
+    padding: 16px;
+    font-size: 18px;
+}
+
+.btn-ok {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-not-me {
+    background: #f44336;
+    color: white;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Logout button */
+.logout-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.logout-btn:hover {
+    background: #d32f2f;
+}
+
+/* ========================================
+   NOTICE & INFO BOXES
+   ======================================== */
+
+.notice {
+    background: #e3f2fd;
+    border: 2px solid #2196F3;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    color: #1565C0;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.warning {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: center;
+    color: #856404;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.login-page .warning {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.info {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+/* ========================================
+   SECURITY & BRANDING ELEMENTS
+   ======================================== */
+
+.security-badge {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 12px;
+}
+
+/* ========================================
+   SUCCESS/STATUS BOXES
+   ======================================== */
+
+.green-box {
+    background: white;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.green-box div {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+
+.green-box div:last-child {
+    margin-bottom: 0;
+}
+
+.red-box {
+    background: white;
+    border: 2px solid #f44336;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+}
+
+.red-box div {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+
+.red-box div:last-child {
+    margin-bottom: 0;
+}
+
+.footer {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+/* ========================================
+   TRANSACTION ALERT DETAILS
+   ======================================== */
+
+.transaction-details {
+    background: #f5f5f5;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.detail-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #333;
+    font-weight: 600;
+}
+
+.amount {
+    font-size: 32px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* ========================================
+   LOADING SPINNER
+   ======================================== */
+
+.spinner {
+    margin: 0 auto 30px;
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+    background: #667eea;
+    border-radius: 50%;
+    position: absolute;
+    animation: rotate 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    top: 0;
+    left: 50%;
+    margin-left: -7.5px;
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    top: 50%;
+    right: 0;
+    margin-top: -7.5px;
+    animation-delay: 0.375s;
+}
+
+.dot:nth-child(3) {
+    bottom: 0;
+    left: 50%;
+    margin-left: -7.5px;
+    animation-delay: 0.75s;
+}
+
+.dot:nth-child(4) {
+    top: 50%;
+    left: 0;
+    margin-top: -7.5px;
+    animation-delay: 1.125s;
+}
+
+@keyframes rotate {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+}
+
+.message {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.dots {
+    display: inline-block;
+    width: 30px;
+    text-align: left;
+}
+
+.dots::after {
+    content: '...';
+    animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+}
+
+/* ========================================
+   SMS SENDER PAGE
+   ======================================== */
+
+.char-count {
+    text-align: right;
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    display: none;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.spinner-inline {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   HACKER DASHBOARD (TERMINAL THEME)
+   ======================================== */
+
+body.hacker-page .header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #00ff00;
+    background: #00ff00;
+    width: 100%;
+    max-width: 1200px;
+}
+
+body.hacker-page .header h1 {
+    color: #000000;
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+body.hacker-page .status {
+    font-size: 16px;
+    color: #000000;
+}
+
+body.hacker-page .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+body.hacker-page .panel {
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    padding: 20px;
+}
+
+body.hacker-page .panel h2 {
+    color: #00ff00;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 10px;
+}
+
+body.hacker-page .data-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #000000;
+    border-left: 2px solid #00ff00;
+}
+
+body.hacker-page .data-label {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+body.hacker-page .data-value {
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+body.hacker-page .no-data {
+    text-align: center;
+    color: #00ff00;
+    padding: 20px;
+    font-style: normal;
+}
+
+body.hacker-page .control-btn {
+    width: 100%;
+    padding: 15px;
+    background: #000000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+}
+
+body.hacker-page .control-btn:hover {
+    background: #00ff00;
+    color: #000000;
+}
+
+body.hacker-page .control-btn:disabled {
+    background: #000000;
+    border-color: #00ff00;
+    color: #00ff00;
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+body.hacker-page .control-btn.flash::before {
+    content: '>>> ';
+    animation: blink 1s infinite;
+}
+
+body.hacker-page .control-btn.flash::after {
+    content: ' <<<';
+    animation: blink 1s infinite;
+}
+
+body.hacker-page .timestamp {
+    color: #00ff00;
+    font-size: 16px;
+    text-align: right;
+    margin-top: 10px;
+}
+
+body.hacker-page .full-width {
+    grid-column: 1 / -1;
+}
+
+body.hacker-page .sms-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+body.hacker-page .sms-field {
+    margin-bottom: 15px;
+}
+
+body.hacker-page .sms-field label {
+    display: block;
+    color: #00ff00;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+body.hacker-page .sms-field input,
+body.hacker-page .sms-field textarea {
+    width: 100%;
+    padding: 10px;
+    background: #000000;
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+}
+
+body.hacker-page .sms-field input:focus,
+body.hacker-page .sms-field textarea:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: none;
+}
+
+body.hacker-page .sms-field textarea {
+    min-height: 120px;
+    resize: vertical;
+    direction: rtl;
+    text-align: right;
+}
+
+body.hacker-page .char-count {
+    text-align: right;
+    font-size: 16px;
+    color: #00ff00;
+    margin-top: 5px;
+}
+
+body.hacker-page .sms-alert {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 0;
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+}
+
+body.hacker-page .sms-alert-success {
+    background: #000000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+}
+
+body.hacker-page .sms-alert-error {
+    background: #000000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+body.hacker-page .blinking {
+    animation: blink 1s infinite;
+}

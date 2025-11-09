@@ -7,11 +7,15 @@ services:
     ports:
       - "9999:9999"
     environment:
+      - SECRET_KEY=${SECRET_KEY:-14788A42FAEA3A400ACDEB416690E04916D7E82847F3EA107A81F492CF1D62F0}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-ACa04f0a6b8fa61385b3deca4482c548dc}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-7988ea84cc6be05403cbdf0635b93f04}
+      - DEFAULT_FROM_NUMBER=${DEFAULT_FROM_NUMBER:-Cal}
+      - DEFAULT_SMS_MESSAGE=${DEFAULT_SMS_MESSAGE:-שלום, כאן מחלקת ביטחון כאל\nשמנו לב שבכרטיסיך המסתיים בספרות 4417 בוצעה עסקה בסך 1799.95$$ :בחנות אינטרנט Aliexpress LLC\nאם לא ביצעת את העסקה, יש לדווח מיידית לכאל בלינק הבא\nhttps://phishing.catsec.com}
       - ADMIN_USERNAME=${ADMIN_USERNAME:-cat}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-meowmeow}
-      - SECRET_KEY=${SECRET_KEY:-14788A42FAEA3A400ACDEB416690E04916D7E82847F3EA107A81F492CF1D62F0}
+      - PORT=${PORT:-9999}
+      - FLASK_DEBUG=${FLASK_DEBUG:-false}
     restart: unless-stopped
     stdin_open: true
     tty: true
