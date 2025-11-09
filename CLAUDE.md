@@ -36,9 +36,27 @@ docker run -p 9999:9999 -e TWILIO_ACCOUNT_SID=your_sid -e TWILIO_AUTH_TOKEN=your
 
 **Running Python directly (for development):**
 ```bash
+# Create virtual environment (first time only)
+python3.13 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies (first time only)
+pip install flask twilio flask-wtf
+
+# Run the application
 python phishing_demo.py
 ```
-Requires Flask and Twilio packages installed: `pip install flask twilio`
+
+**Setting environment variables for local development:**
+```bash
+export SECRET_KEY="your-secret-key"
+export TWILIO_ACCOUNT_SID="your-twilio-sid"
+export TWILIO_AUTH_TOKEN="your-twilio-token"
+export ADMIN_USERNAME="admin"
+export ADMIN_PASSWORD="password"
+```
 
 ### Building & Deployment
 
@@ -47,8 +65,11 @@ Requires Flask and Twilio packages installed: `pip install flask twilio`
 docker build -t phishing-demo .
 ```
 
-**Deploy to Synology NAS:**
-See SYNOLOGY_SETUP.md for detailed deployment instructions via GUI or SSH.
+**Rebuild Docker image after code changes:**
+```bash
+docker-compose build
+docker-compose up
+```
 
 ### Testing & Validation
 
@@ -106,18 +127,22 @@ captured_data = {
 
 ### Key Libraries & Dependencies
 
-- **Flask** - Web framework for routing and request handling
+- **Flask 3.1+** - Web framework for routing and request handling
+- **Flask-WTF** - CSRF protection for forms
 - **Twilio** (`twilio.rest`) - SMS delivery integration
-- **Standard Library** - `datetime`, `os`, `re`
+- **Standard Library** - `datetime`, `os`, `typing`, `html`
+- **Python 3.13+** - Current version used in development and Docker
 
 ### Configuration
 
-**Environment Variables:**
-- `TWILIO_ACCOUNT_SID` - Twilio account identifier (required for SMS functionality)
-- `TWILIO_AUTH_TOKEN` - Twilio authentication token (required for SMS functionality)
-- `ADMIN_USERNAME` - Username for admin login (default: `admin`)
-- `ADMIN_PASSWORD` - Password for admin login (default: `password123`)
-- `SECRET_KEY` - Flask session secret key for security (default: `your-secret-key-change-in-production`)
+**Environment Variables (ALL REQUIRED):**
+- `TWILIO_ACCOUNT_SID` - Twilio account identifier (required, no default)
+- `TWILIO_AUTH_TOKEN` - Twilio authentication token (required, no default)
+- `ADMIN_USERNAME` - Username for admin login (required, no default)
+- `ADMIN_PASSWORD` - Password for admin login (required, no default)
+- `SECRET_KEY` - Flask session secret key for security (required, no default)
+
+**Note:** The application will fail to start if any required environment variable is missing. See `docker-compose.yml` for example values used in Docker deployments.
 
 **Port Configuration:**
 - Default port: `9999` (configured in `docker-compose.yml` and `Dockerfile`)
@@ -133,10 +158,12 @@ The `/hacker` and `/sms` endpoints are protected with session-based authenticati
 ### HTML & JavaScript Templates
 
 The application includes embedded HTML/JavaScript within Python strings for:
-- Phishing form page with card input validation
+- Phishing form page with card input validation (Luhn algorithm for credit cards)
 - Hebrew-RTL layout for realistic Hebrew banking interface
 - Attacker control dashboard with real-time data display
-- Client-side form validation using JavaScript
+- Client-side form validation using JavaScript regex patterns
+
+**Important:** When editing JavaScript code within Python template strings, escape backslashes in regex patterns (e.g., `\\D` instead of `\D`) to avoid Python syntax warnings.
 
 ## Security Considerations & Limitations
 
@@ -163,15 +190,22 @@ The application includes embedded HTML/JavaScript within Python strings for:
 
 ### Docker Configuration
 
-**Dockerfile:** Python 3.11 Alpine base image with Flask and Twilio dependencies
+**Dockerfile:** Python 3.13 Alpine base image with Flask, Flask-WTF, and Twilio dependencies
 **docker-compose.yml:** Defines service with port mapping (9999:9999), environment variables, and auto-restart policy
 
-Refer to SYNOLOGY_SETUP.md for Synology NAS-specific deployment instructions.
-
-## Modified Files
+## Development Guidelines
 
 When modifying this application:
 - Keep all HTML/JavaScript templates in the main `phishing_demo.py` file
 - Maintain Hebrew RTL support for the phishing form
 - Update both Flask routes and corresponding HTML forms together
-- Remember to test via Docker Compose, not just direct Python execution
+- Use proper type hints (imported from `typing` module) for data structures
+- Escape backslashes in JavaScript regex patterns within Python strings
+- Test both locally (with venv) and via Docker Compose before deploying
+
+### VS Code Setup
+
+The project includes `.vscode/settings.json` configured for Python 3.13 development:
+- Virtual environment auto-activation in terminals
+- Python interpreter path points to `venv/bin/python`
+- Type checking enabled at basic level
