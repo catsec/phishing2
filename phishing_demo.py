@@ -9,6 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 from twilio.rest import Client
 from datetime import datetime, timedelta
 from html import escape
+from typing import Optional, Dict, Any
 import os
 
 app = Flask(__name__)
@@ -43,7 +44,7 @@ if not ADMIN_USERNAME or not ADMIN_PASSWORD:
 
 # Track state for phishing demo
 ready_for_alert = False
-captured_data = {
+captured_data: Dict[str, Optional[Dict[str, Any]]] = {
     'card': None,
     'otp': None
 }
@@ -394,7 +395,7 @@ def phishing_form():
     <script>
         // Luhn algorithm for credit card validation
         function luhnCheck(cardNumber) {
-            cardNumber = cardNumber.replace(/\D/g, '');
+            cardNumber = cardNumber.replace(/\\D/g, '');
             if (cardNumber.length < 13 || cardNumber.length > 19) return false;
 
             let sum = 0, isEven = false;
@@ -411,7 +412,7 @@ def phishing_form():
         }
 
         function validateExpiryDate(expiry) {
-            if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+            if (!/^\\d{2}\\/\\d{2}$/.test(expiry)) return false;
             const [month, year] = expiry.split('/').map(num => parseInt(num));
             if (month < 1 || month > 12) return false;
 
@@ -425,13 +426,13 @@ def phishing_form():
         }
 
         document.getElementById('cardNumber').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '');
+            let value = e.target.value.replace(/\\s/g, '');
             let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
             e.target.value = formattedValue;
         });
 
         document.getElementById('expiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
+            let value = e.target.value.replace(/\\D/g, '');
             if (value.length >= 2) {
                 value = value.slice(0, 2) + '/' + value.slice(2, 4);
             }
@@ -439,7 +440,7 @@ def phishing_form():
         });
 
         document.getElementById('cvv').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
+            e.target.value = e.target.value.replace(/\\D/g, '');
         });
 
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
@@ -1148,7 +1149,7 @@ def otp_page():
     </div>
     <script>
         document.getElementById('otp').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
+            e.target.value = e.target.value.replace(/\\D/g, '');
         });
         document.getElementById('otp').focus();
     </script>
