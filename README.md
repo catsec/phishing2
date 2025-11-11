@@ -7,7 +7,7 @@
 <a name="english"></a>
 ## English
 
-### ⚠️ WARNING - Educational Use Only
+### WARNING - Educational Use Only
 
 This application simulates a phishing attack for **authorized security awareness training purposes ONLY**.
 
@@ -21,7 +21,7 @@ This tool is designed for educational demonstrations in controlled environments 
 
 ---
 
-### 📋 Overview
+### Overview
 
 A Flask-based phishing awareness training application that demonstrates:
 - Fake banking phishing pages
@@ -41,7 +41,7 @@ A Flask-based phishing awareness training application that demonstrates:
 
 ---
 
-### 🚀 Quick Start
+### Quick Start
 
 #### Prerequisites
 - Docker and Docker Compose **OR**
@@ -105,7 +105,7 @@ python phishing_demo.py
 
 ---
 
-### 🎯 Usage
+### Usage
 
 #### For Demonstrators (Attackers)
 
@@ -152,7 +152,7 @@ Use these test credentials for demonstrations:
 
 ---
 
-### 📁 Project Structure
+### Project Structure
 
 ```
 phishing2/
@@ -176,7 +176,7 @@ phishing2/
 
 ---
 
-### 🔒 Security Features
+### Security Features
 
 - Session-based authentication for admin routes
 - CSRF protection on all forms (Flask-WTF)
@@ -188,7 +188,7 @@ phishing2/
 
 ---
 
-### ⚙️ Configuration
+### Configuration
 
 All configuration via environment variables:
 
@@ -210,7 +210,7 @@ See `docker-compose.yml` for default values.
 
 ---
 
-### 🌐 Endpoints
+### Endpoints
 
 **Victim Flow:**
 - `/` - Phishing form (Hebrew banking interface)
@@ -231,7 +231,7 @@ See `docker-compose.yml` for default values.
 
 ---
 
-### 🎨 Features
+### Features
 
 - **Hebrew RTL Support:** Realistic Israeli banking interface
 - **Terminal Theme:** Matrix-style hacker dashboard
@@ -242,7 +242,7 @@ See `docker-compose.yml` for default values.
 
 ---
 
-### 📝 License & Disclaimer
+### License & Disclaimer
 
 **This software is for educational and authorized security training purposes only.**
 
@@ -256,7 +256,7 @@ The authors and contributors are not responsible for misuse of this software.
 
 ---
 
-### 🛠️ Development
+### Development
 
 **Built with:**
 - Python 3.13
@@ -272,7 +272,7 @@ The authors and contributors are not responsible for misuse of this software.
 <a name="hebrew"></a>
 ## עברית
 
-### ⚠️ אזהרה - לשימוש חינוכי בלבד
+### אזהרה - לשימוש חינוכי בלבד
 
 אפליקציה זו מדמה התקפת פישינג **למטרות הדרכה מורשות בלבד**.
 
@@ -286,7 +286,7 @@ The authors and contributors are not responsible for misuse of this software.
 
 ---
 
-### 📋 סקירה כללית
+### סקירה כללית
 
 אפליקציית הדרכה מבוססת Flask המדגימה:
 - דפי פישינג מזויפים של בנקים
@@ -306,7 +306,7 @@ The authors and contributors are not responsible for misuse of this software.
 
 ---
 
-### 🚀 התחלה מהירה
+### התחלה מהירה
 
 #### דרישות מקדימות
 - Docker ו-Docker Compose **או**
@@ -370,7 +370,7 @@ python phishing_demo.py
 
 ---
 
-### 🎯 שימוש
+### שימוש
 
 #### למדגימים (תוקפים)
 
@@ -417,7 +417,7 @@ python phishing_demo.py
 
 ---
 
-### 📁 מבנה הפרויקט
+### מבנה הפרויקט
 
 ```
 phishing2/
@@ -441,7 +441,7 @@ phishing2/
 
 ---
 
-### 🔒 תכונות אבטחה
+### תכונות אבטחה
 
 - אימות מבוסס session למסלולי מנהל
 - הגנת CSRF על כל הטפסים (Flask-WTF)
@@ -453,7 +453,7 @@ phishing2/
 
 ---
 
-### ⚙️ תצורה
+### תצורה
 
 כל התצורה באמצעות משתני סביבה:
 
@@ -475,7 +475,7 @@ phishing2/
 
 ---
 
-### 🌐 נקודות קצה
+### נקודות קצה
 
 **זרימת קורבן:**
 - `/` - טופס פישינג (ממשק בנקאי עברי)
@@ -496,7 +496,7 @@ phishing2/
 
 ---
 
-### 🎨 תכונות
+### תכונות
 
 - **תמיכה בעברית RTL:** ממשק בנקאי ישראלי ריאליסטי
 - **ערכת טרמינל:** לוח בקרה בסגנון Matrix
@@ -507,7 +507,7 @@ phishing2/
 
 ---
 
-### 📝 רישיון ואזהרה
+### רישיון ואזהרה
 
 **תוכנה זו מיועדת למטרות חינוכיות והדרכה מורשות בלבד.**
 
@@ -521,7 +521,7 @@ phishing2/
 
 ---
 
-### 🛠️ פיתוח
+### פיתוח
 
 **נבנה עם:**
 - Python 3.13
@@ -534,7 +534,7 @@ phishing2/
 
 ---
 
-## 📞 Support | תמיכה
+## Support | תמיכה
 
 For issues, questions, or contributions, please contact catsec.com
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Phishing Awareness Training Demonstration Application** - a Flask-based web application that simulates a phishing attack flow for authorized security training purposes only. The application demonstrates how attackers capture sensitive data (credit cards, OTP codes) through a multi-stage phishing scenario.
 
-**⚠️ WARNING:** This application contains code that simulates malicious phishing techniques. It is intended ONLY for authorized security awareness training and should never be used for actual phishing attacks or unauthorized access.
+**WARNING:** This application contains code that simulates malicious phishing techniques. It is intended ONLY for authorized security awareness training and should never be used for actual phishing attacks or unauthorized access.
 
 ## Test Data
 
