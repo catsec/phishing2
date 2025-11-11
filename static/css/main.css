@@ -332,24 +332,6 @@ button:disabled {
     gap: 15px;
 }
 
-/* Logout button */
-.logout-btn {
-    background: #f44336;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    text-decoration: none;
-    transition: all 0.3s;
-    display: inline-block;
-}
-
-.logout-btn:hover {
-    background: #d32f2f;
-}
-
 /* ========================================
    NOTICE & INFO BOXES
    ======================================== */
@@ -890,6 +872,11 @@ body.disclaimer-page .disclaimer-section {
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+body.disclaimer-page .english-section {
+    direction: ltr;
+    text-align: left;
 }
 
 body.disclaimer-page .disclaimer-section h2 {

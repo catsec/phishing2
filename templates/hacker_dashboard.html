@@ -25,13 +25,13 @@
                     </div>
                     <div class="sms-field">
                         <label for="to">To Number</label>
-                        <input type="tel" id="to" name="to" value="+9725" placeholder="+9725XXXXXXX" required>
+                        <input type="tel" id="to" name="to" value="{{ default_to }}" placeholder="+9725XXXXXXX" required>
                     </div>
                 </div>
                 <div class="sms-field">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" placeholder="Enter your message here..." required maxlength="1600">{{ default_sms_message }}</textarea>
-                    <div class="char-count"><span id="charCount">0</span> / 1600</div>
+                    <textarea id="message" name="message" placeholder="Enter your message here..." required maxlength="{{ max_sms_length }}">{{ default_sms_message }}</textarea>
+                    <div class="char-count"><span id="charCount">0</span> / {{ max_sms_length }}</div>
                 </div>
                 <button type="submit" id="sendBtn" class="control-btn">Send SMS</button>
             </form>
@@ -122,7 +122,7 @@
                 if (response.ok) {
                     showSmsAlert(`SUCCESS: Message sent! SID: ${result.sid}`, 'success');
                     // Reset form fields but keep default values
-                    document.getElementById('to').value = '+9725';
+                    document.getElementById('to').value = '{{ default_to }}';
                     charCount.textContent = messageInput.value.length;
                 } else {
                     showSmsAlert(`ERROR: ${result.error}`, 'error');
