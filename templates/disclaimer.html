@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אזהרה - Security Awareness Training Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body class="disclaimer-page">
+    <div class="container">
+        <div class="disclaimer-header">
+            <h1>⚠️ אזהרה - Security Awareness Training ⚠️</h1>
+        </div>
+
+        <!-- Hebrew Section -->
+        <div class="disclaimer-section">
+            <h2>תכלית הדמו</h2>
+            <p>
+                זהו <strong>דמו להדרכת מודעות אבטחה</strong> המיועד להדגים כיצד התקפות פישינג פועלות.
+                האפליקציה הזו נועדה <strong>למטרות הדרכה בלבד</strong> בסביבה מבוקרת.
+            </p>
+        </div>
+
+        <div class="disclaimer-section warning-box">
+            <h2>⚠️ אזהרה חשובה ⚠️</h2>
+            <p><strong>לעולם אל תזין מידע אמיתי:</strong></p>
+            <ul>
+                <li>אל תזין מספרי כרטיס אשראי אמיתיים</li>
+                <li>אל תזין קודי CVV אמיתיים</li>
+                <li>אל תזין מידע אישי אמיתי</li>
+                <li>אל תזין קודי OTP אמיתיים</li>
+                <li>השתמש רק בנתונים פיקטיביים לצורכי הדגמה</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer-section info-box">
+            <h2>מדיניות נתונים</h2>
+            <p>
+                <strong>שום דבר לא נשמר באופן קבוע.</strong>
+                כל הנתונים שמוזנים נשמרים בזיכרון בלבד ונמחקים כאשר האפליקציה מופעלת מחדש.
+                הנתונים אינם מאוחסנים במסד נתונים, אינם נרשמים לקבצים, ואינם מועברים לשום מערכת חיצונית.
+            </p>
+        </div>
+
+        <!-- English Section -->
+        <div class="disclaimer-section" style="direction: ltr; text-align: left;">
+            <h2>Purpose of This Demo</h2>
+            <p>
+                This is a <strong>Security Awareness Training Demo</strong> designed to demonstrate how phishing attacks work.
+                This application is intended for <strong>educational purposes only</strong> in a controlled environment.
+            </p>
+        </div>
+
+        <div class="disclaimer-section warning-box" style="direction: ltr; text-align: left;">
+            <h2>⚠️ Important Warning ⚠️</h2>
+            <p><strong>Never Enter Real Information:</strong></p>
+            <ul>
+                <li>Do NOT enter real credit card numbers</li>
+                <li>Do NOT enter real CVV codes</li>
+                <li>Do NOT enter real personal information</li>
+                <li>Do NOT enter real OTP codes</li>
+                <li>Use only fictitious data for demonstration purposes</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer-section info-box" style="direction: ltr; text-align: left;">
+            <h2>Data Policy</h2>
+            <p>
+                <strong>Nothing is saved permanently.</strong>
+                All data entered is stored in memory only and deleted when the application restarts.
+                Data is not stored in a database, not logged to files, and not transmitted to any external systems.
+            </p>
+        </div>
+
+        <div class="disclaimer-footer">
+            <p style="direction: ltr; text-align: center;">
+                This information is provided for your awareness.
+                Close this page to return to the application.
+            </p>
+            <button type="button" class="btn accept-btn" onclick="window.close()">סגור / Close</button>
+        </div>
+    </div>
+</body>
+</html>

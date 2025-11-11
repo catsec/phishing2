@@ -15,8 +15,8 @@ For manual testing of the phishing flow:
 - **Card Number:** 4580123412341232
 - **Expiry Date:** 12/35
 - **CVV:** 123
-- **Admin Username:** cat
-- **Admin Password:** meowmeow
+- **Admin Username:** admin
+- **Admin Password:** password
 
 ## Common Development Commands
 
@@ -51,16 +51,18 @@ python phishing_demo.py
 
 **Setting environment variables for local development:**
 ```bash
-export SECRET_KEY="your-secret-key"
 export TWILIO_ACCOUNT_SID="your-twilio-sid"
 export TWILIO_AUTH_TOKEN="your-twilio-token"
-export DEFAULT_FROM_NUMBER="Cal"
-export DEFAULT_SMS_MESSAGE="Your default SMS message text here"
+export DEFAULT_FROM_NUMBER="BANK"
+export DEFAULT_SMS_MESSAGE="This is a test message from your bank"
+export COMPANY_HEBREW="בנק"
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="password"
 export PORT="9999"
 export FLASK_DEBUG="false"
 ```
+
+**Note:** The SECRET_KEY is automatically generated at startup using `secrets.token_hex(32)` - no manual configuration needed.
 
 ### Building & Deployment
 
@@ -140,11 +142,11 @@ captured_data = {
 ### Configuration
 
 **Environment Variables (ALL REQUIRED):**
-- `SECRET_KEY` - Flask session secret key for security
 - `TWILIO_ACCOUNT_SID` - Twilio account identifier
 - `TWILIO_AUTH_TOKEN` - Twilio authentication token
 - `DEFAULT_FROM_NUMBER` - Default "from" number for SMS sender (e.g., "Cal" or "+1234567890")
 - `DEFAULT_SMS_MESSAGE` - Default SMS message text to pre-populate in the SMS sender interface
+- `COMPANY_HEBREW` - Company name in Hebrew to display in phishing pages (e.g., "בנק")
 - `ADMIN_USERNAME` - Username for admin login
 - `ADMIN_PASSWORD` - Password for admin login
 - `PORT` - Port to run the application on (e.g., "9999")
@@ -152,11 +154,13 @@ captured_data = {
 
 **Important:** The application will fail to start with a clear error message if ANY environment variable is missing or invalid. There are no default values. See `docker-compose.yml` for example configuration.
 
+**Note:** The Flask `SECRET_KEY` is automatically generated at startup using `secrets.token_hex(32)` - no manual configuration needed since all data is stored in-memory only.
+
 ### Authentication
 
 The `/hacker` and `/send` endpoints are protected with session-based authentication:
 - Users must login at `/login` with valid credentials
-- Session tokens are stored in Flask sessions (requires `SECRET_KEY`)
+- Session tokens are stored in Flask sessions (uses auto-generated SECRET_KEY)
 - Users can logout at `/logout` which clears the session
 - Authentication is enforced via the `@require_auth` decorator on protected routes
 

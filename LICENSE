@@ -1,0 +1,215 @@
+PROPRIETARY SOFTWARE LICENSE
+============================
+
+Copyright (c) 2025 catsec.com. All rights reserved.
+
+GRANT OF LICENSE
+
+This software and associated documentation files (the "Software") are the
+proprietary property of catsec.com. Subject to the terms and conditions of
+this License, catsec.com grants you a limited, non-exclusive, non-transferable,
+revocable license to use the Software.
+
+PERMITTED USE
+
+You are permitted to:
+1. Use the Software in its current form for authorized security awareness
+   training and educational demonstrations
+2. Deploy the Software in controlled, authorized environments
+3. Execute the Software for legitimate security training purposes
+4. Make backup copies of the Software for archival purposes only
+
+RESTRICTIONS
+
+You are expressly PROHIBITED from:
+1. Modifying, altering, adapting, or creating derivative works of the Software
+2. Decompiling, reverse engineering, or disassembling the Software
+3. Removing, altering, or obscuring any copyright, trademark, or proprietary
+   notices from the Software
+4. Distributing, sublicensing, selling, renting, or leasing the Software to
+   third parties
+5. Using the Software for any malicious, illegal, or unauthorized purposes
+6. Using the Software for actual phishing attacks or unauthorized access attempts
+7. Modifying any configuration files, source code, templates, or stylesheets
+8. Creating modified versions or forks of the Software
+9. Incorporating any part of the Software into other applications
+10. Publishing, sharing, or making the Software publicly available
+
+MANDATORY REQUIREMENTS
+
+When using the Software, you MUST:
+1. Use the Software ONLY in authorized, controlled environments
+2. Obtain proper authorization before conducting security awareness training
+3. Never use real personal information or financial data
+4. Display all warning messages and disclaimers included with the Software
+5. Comply with all applicable laws and regulations
+6. Use the Software for educational purposes only
+
+AS-IS PROVISION
+
+The Software is provided "AS IS" without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose, and non-infringement.
+
+NO LIABILITY
+
+In no event shall catsec.com, its authors, contributors, or copyright holders
+be liable for any claim, damages, or other liability, whether in an action of
+contract, tort, or otherwise, arising from, out of, or in connection with the
+Software or the use or other dealings in the Software.
+
+SECURITY AND COMPLIANCE
+
+This Software is designed for authorized security awareness training only.
+Any use of this Software for malicious purposes, unauthorized access, or in
+violation of applicable laws is strictly prohibited and may result in:
+1. Immediate termination of this license
+2. Legal action for damages
+3. Criminal prosecution under applicable laws
+
+NO MODIFICATION ALLOWED
+
+The Software MUST be used in its original, unmodified form. Any modification,
+alteration, or change to the Software, including but not limited to:
+- Source code changes
+- Template modifications
+- CSS/styling changes
+- Configuration alterations (except environment variables as documented)
+- Addition or removal of features
+- Changes to warning messages or disclaimers
+
+...is strictly PROHIBITED and constitutes a material breach of this license.
+
+TERMINATION
+
+This license is effective until terminated. Your rights under this license
+will terminate automatically without notice from catsec.com if you fail to
+comply with any term(s) of this license. Upon termination, you must cease
+all use of the Software and destroy all copies.
+
+GOVERNING LAW
+
+This license shall be governed by and construed in accordance with the laws
+of the jurisdiction in which catsec.com operates, without regard to its
+conflict of law provisions.
+
+ENTIRE AGREEMENT
+
+This license constitutes the entire agreement between you and catsec.com
+concerning the Software and supersedes all prior or contemporaneous
+understandings regarding such subject matter.
+
+CONTACT
+
+For licensing inquiries, permissions, or questions:
+Contact: catsec.com
+
+ACKNOWLEDGMENT
+
+By using the Software, you acknowledge that you have read this license,
+understand it, and agree to be bound by its terms and conditions.
+
+---
+
+רישיון תוכנה קנייני
+===================
+
+זכויות יוצרים (c) 2025 catsec.com. כל הזכויות שמורות.
+
+מתן רישיון
+
+תוכנה זו וקבצי התיעוד הנלווים (להלן: "התוכנה") הם קניינה של catsec.com.
+בכפוף לתנאים והגבלות של רישיון זה, catsec.com מעניק לך רישיון מוגבל,
+לא בלעדי, לא ניתן להעברה וניתן לביטול לשימוש בתוכנה.
+
+שימוש מותר
+
+מותר לך:
+1. להשתמש בתוכנה בצורתה הנוכחית להדרכת מודעות אבטחה מורשית והדגמות חינוכיות
+2. לפרוס את התוכנה בסביבות מבוקרות ומורשות
+3. להפעיל את התוכנה למטרות הדרכת אבטחה לגיטימיות
+4. ליצור עותקי גיבוי של התוכנה למטרות ארכיון בלבד
+
+הגבלות
+
+אסור לך במפורש:
+1. לשנות, להתאים או ליצור יצירות נגזרות של התוכנה
+2. לפרק, להנדס לאחור או לפרק את התוכנה
+3. להסיר, לשנות או להסתיר כל הודעת זכויות יוצרים, סימן מסחרי או הודעה קניינית
+   מהתוכנה
+4. להפיץ, לתת רישיון משנה, למכור, להשכיר או להחכיר את התוכנה לצדדים שלישיים
+5. להשתמש בתוכנה למטרות זדוניות, בלתי חוקיות או לא מורשות
+6. להשתמש בתוכנה להתקפות פישינג אמיתיות או ניסיונות גישה לא מורשים
+7. לשנות כל קובץ תצורה, קוד מקור, תבניות או גיליונות סגנון
+8. ליצור גרסאות שונות או פיצולים (forks) של התוכנה
+9. לשלב כל חלק מהתוכנה באפליקציות אחרות
+10. לפרסם, לשתף או להפוך את התוכנה לזמינה לציבור
+
+דרישות חובה
+
+בעת שימוש בתוכנה, עליך:
+1. להשתמש בתוכנה רק בסביבות מורשות ומבוקרות
+2. לקבל אישור מתאים לפני ביצוע הדרכת מודעות אבטחה
+3. לעולם לא להשתמש במידע אישי או פיננסי אמיתי
+4. להציג את כל הודעות האזהרה והאזהרות הכלולות בתוכנה
+5. לציית לכל החוקים והתקנות החלים
+6. להשתמש בתוכנה למטרות חינוכיות בלבד
+
+מתן כמות שהוא
+
+התוכנה מסופקת "כמות שהיא" ללא אחריות מכל סוג, מפורשת או משתמעת,
+כולל אך לא מוגבל לאחריות סחירות, התאמה למטרה מסוימת ואי-הפרה.
+
+אין אחריות
+
+בשום מקרה לא יהיו catsec.com, מחבריה, תורמיה או בעלי זכויות היוצרים
+אחראים לכל תביעה, נזק או אחריות אחרת, בין אם בתביעה חוזית, נזיקית
+או אחרת, הנובעת מהתוכנה או השימוש או העסקאות האחרות בתוכנה.
+
+אבטחה וציות
+
+תוכנה זו מיועדת להדרכת מודעות אבטחה מורשית בלבד. כל שימוש בתוכנה זו
+למטרות זדוניות, גישה לא מורשת או בניגוד לחוקים החלים אסור בהחלט ועלול
+לגרום ל:
+1. ביטול מיידי של רישיון זה
+2. תביעה משפטית לפיצויים
+3. העמדה לדין פלילי על פי החוקים החלים
+
+אין לשנות
+
+יש להשתמש בתוכנה בצורתה המקורית והבלתי ששונתה. כל שינוי, התאמה או שינוי
+בתוכנה, כולל אך לא מוגבל ל:
+- שינויי קוד מקור
+- שינויי תבניות
+- שינויי CSS/עיצוב
+- שינויי תצורה (למעט משתני סביבה כמתועד)
+- הוספה או הסרה של תכונות
+- שינויים בהודעות אזהרה או אזהרות
+
+...אסור בהחלט ומהווה הפרה מהותית של רישיון זה.
+
+סיום
+
+רישיון זה תקף עד לביטולו. זכויותיך לפי רישיון זה יסתיימו אוטומטית ללא
+הודעה מ-catsec.com אם לא תעמוד בתנאי(ם) כלשהם של רישיון זה. עם הסיום,
+עליך להפסיק כל שימוש בתוכנה ולהשמיד את כל העותקים.
+
+דין חל
+
+רישיון זה יהיה כפוף ויפורש בהתאם לחוקי תחום השיפוט שבו פועל catsec.com,
+ללא קשר להוראות ניגוד החוקים שלו.
+
+הסכם שלם
+
+רישיון זה מהווה את ההסכם השלם ביניך לבין catsec.com בנוגע לתוכנה
+ומחליף את כל ההבנות הקודמות או בו-זמניות בנוגע לנושא זה.
+
+יצירת קשר
+
+לשאלות רישוי, הרשאות או שאלות:
+יצירת קשר: catsec.com
+
+הכרה
+
+על ידי שימוש בתוכנה, אתה מאשר שקראת רישיון זה, מבין אותו ומסכים להיות
+מחויב לתנאיו והגבלותיו.

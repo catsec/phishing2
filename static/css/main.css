@@ -854,3 +854,192 @@ body.hacker-page .sms-alert-error {
 body.hacker-page .blinking {
     animation: blink 1s infinite;
 }
+
+/* ========================================
+   DISCLAIMER PAGE
+   ======================================== */
+
+body.disclaimer-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.disclaimer-page .container {
+    max-width: 800px;
+    padding: 40px;
+}
+
+body.disclaimer-page .disclaimer-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fff3cd;
+    border: 3px solid #ff9800;
+    border-radius: 12px;
+}
+
+body.disclaimer-page .disclaimer-header h1 {
+    color: #d32f2f;
+    font-size: 26px;
+    margin: 0;
+    font-weight: bold;
+}
+
+body.disclaimer-page .disclaimer-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+body.disclaimer-page .disclaimer-section h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+body.disclaimer-page .disclaimer-section p {
+    color: #444;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+
+body.disclaimer-page .disclaimer-section ul {
+    margin: 15px 0;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+
+body.disclaimer-page .disclaimer-section li {
+    color: #444;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+body.disclaimer-page .warning-box {
+    background: #fff3cd;
+    border: 2px solid #ff9800;
+}
+
+body.disclaimer-page .warning-box h2 {
+    color: #d32f2f;
+}
+
+body.disclaimer-page .info-box {
+    background: #e3f2fd;
+    border: 2px solid #2196F3;
+}
+
+body.disclaimer-page .info-box h2 {
+    color: #1565C0;
+}
+
+body.disclaimer-page .disclaimer-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+body.disclaimer-page .disclaimer-footer p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+body.disclaimer-page .accept-btn {
+    width: 100%;
+    max-width: 500px;
+    padding: 18px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+body.disclaimer-page .accept-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* ========================================
+   DEMO FOOTER (ALL PAGES)
+   ======================================== */
+
+.demo-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ff0000;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 9999;
+    border-top: 4px solid #ffeb3b;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+    animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        background: #ff0000;
+    }
+    50% {
+        background: #cc0000;
+    }
+}
+
+.demo-footer a {
+    color: #ffeb3b;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.demo-footer a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Hacker page footer styling */
+body.hacker-page .demo-footer {
+    background: #ff0000;
+    color: #ffffff;
+    border-top: 4px solid #00ff00;
+    animation: pulse-warning-hacker 2s infinite;
+}
+
+@keyframes pulse-warning-hacker {
+    0%, 100% {
+        background: #ff0000;
+        border-top-color: #00ff00;
+    }
+    50% {
+        background: #cc0000;
+        border-top-color: #ffeb3b;
+    }
+}
+
+body.hacker-page .demo-footer a {
+    color: #00ff00;
+    font-size: 17px;
+}
+
+body.hacker-page .demo-footer a:hover {
+    color: #ffeb3b;
+    text-decoration: underline;
+}
