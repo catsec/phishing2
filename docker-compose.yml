@@ -14,6 +14,8 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - PORT=${PORT}
       - FLASK_DEBUG=${FLASK_DEBUG}
+      - BEHIND_HTTPS_PROXY=${BEHIND_HTTPS_PROXY}
+      - DEFAULT_TO_NUMBER=${DEFAULT_TO_NUMBER}
     restart: unless-stopped
     stdin_open: true
     tty: true

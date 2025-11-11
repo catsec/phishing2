@@ -1,0 +1,10 @@
+# Test Dependencies for Phishing Demo Automated Tests
+
+# Browser automation
+selenium>=4.15.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# HTTP requests (for health checks)
+requests>=2.31.0

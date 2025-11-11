@@ -1,0 +1,14 @@
+# Test Dependencies with Automatic ChromeDriver Management
+# Use this version if you have ChromeDriver permission issues on macOS
+
+# Browser automation
+selenium>=4.15.0
+
+# Automatic ChromeDriver management (no manual install needed!)
+webdriver-manager>=4.0.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# HTTP requests (for health checks)
+requests>=2.31.0
