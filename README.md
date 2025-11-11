@@ -50,25 +50,49 @@ A Flask-based phishing awareness training application that demonstrates:
 
 #### Installation
 
-**Option 1: Docker (Recommended)**
+**Option 1: Pre-built Docker Image (Fastest)**
+
+```bash
+# Pull the pre-built image from Docker Hub
+docker pull ramprass/phishing-demo:latest
+
+# Create .env file with your credentials
+cat > .env <<'EOF'
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+DEFAULT_FROM_NUMBER=BANK
+DEFAULT_SMS_MESSAGE=Your SMS message here
+COMPANY_HEBREW=בנק
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change_this_password
+PORT=9999
+FLASK_DEBUG=false
+BEHIND_HTTPS_PROXY=false
+DEFAULT_TO_NUMBER=+9725
+EOF
+
+# Run the container
+docker run -d \
+  --name phishing-demo \
+  -p 9999:9999 \
+  --env-file .env \
+  ramprass/phishing-demo:latest
+```
+
+The application will be available at `http://localhost:9999`
+
+**Option 2: Docker Compose (Build from Source)**
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/catsec/phishing2.git
 cd phishing2
 
-# IMPORTANT: Configure credentials before starting
-# Edit docker-compose.yml and update the following:
-#   1. TWILIO_ACCOUNT_SID - Your Twilio account SID
-#   2. TWILIO_AUTH_TOKEN - Your Twilio authentication token
-#   3. DEFAULT_FROM_NUMBER - Your SMS sender ID (e.g., "BANK" or phone number)
-#   4. ADMIN_USERNAME - Change from default "admin" to your preferred username
-#   5. ADMIN_PASSWORD - Change from default "password" to a secure password
+# Copy example .env and configure your credentials
+cp .env.example .env
+# Edit .env with your actual credentials
 
-# ⚠️ SECURITY WARNING: The default admin credentials are:
-#    Username: admin
-#    Password: password
-# It is STRONGLY RECOMMENDED to change these before running the application!
+# ⚠️ SECURITY WARNING: Change the default admin credentials!
 
 # Start the application
 docker-compose up
@@ -76,7 +100,7 @@ docker-compose up
 
 The application will be available at `http://localhost:9999`
 
-**Option 2: Python Virtual Environment**
+**Option 3: Python Virtual Environment**
 
 ```bash
 # Create virtual environment
@@ -315,25 +339,49 @@ The authors and contributors are not responsible for misuse of this software.
 
 #### התקנה
 
-**אפשרות 1: Docker (מומלץ)**
+**אפשרות 1: Docker Image מוכן מראש (הכי מהיר)**
+
+```bash
+# משיכת ה-image המוכן מ-Docker Hub
+docker pull ramprass/phishing-demo:latest
+
+# יצירת קובץ .env עם האישורים שלך
+cat > .env <<'EOF'
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+DEFAULT_FROM_NUMBER=BANK
+DEFAULT_SMS_MESSAGE=הודעת SMS שלך כאן
+COMPANY_HEBREW=בנק
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change_this_password
+PORT=9999
+FLASK_DEBUG=false
+BEHIND_HTTPS_PROXY=false
+DEFAULT_TO_NUMBER=+9725
+EOF
+
+# הרצת ה-container
+docker run -d \
+  --name phishing-demo \
+  -p 9999:9999 \
+  --env-file .env \
+  ramprass/phishing-demo:latest
+```
+
+האפליקציה תהיה זמינה ב-`http://localhost:9999`
+
+**אפשרות 2: Docker Compose (בניה מקוד מקור)**
 
 ```bash
 # שיבוט המאגר
-git clone <repository-url>
+git clone https://github.com/catsec/phishing2.git
 cd phishing2
 
-# חשוב: הגדר אישורים לפני ההפעלה
-# ערוך את docker-compose.yml ועדכן את הפרמטרים הבאים:
-#   1. TWILIO_ACCOUNT_SID - מזהה חשבון Twilio שלך
-#   2. TWILIO_AUTH_TOKEN - טוקן אימות Twilio שלך
-#   3. DEFAULT_FROM_NUMBER - מזהה שולח SMS שלך (למשל "BANK" או מספר טלפון)
-#   4. ADMIN_USERNAME - שנה מברירת המחדל "admin" לשם משתמש מועדף
-#   5. ADMIN_PASSWORD - שנה מברירת המחדל "password" לסיסמה מאובטחת
+# העתקת .env לדוגמה והגדרת האישורים שלך
+cp .env.example .env
+# ערוך .env עם האישורים האמיתיים שלך
 
-# ⚠️ אזהרת אבטחה: אישורי ברירת המחדל של המנהל הם:
-#    שם משתמש: admin
-#    סיסמה: password
-# מומלץ בחום לשנות אותם לפני הרצת האפליקציה!
+# ⚠️ אזהרת אבטחה: שנה את אישורי ברירת המחדל של המנהל!
 
 # הפעלת האפליקציה
 docker-compose up
@@ -341,7 +389,7 @@ docker-compose up
 
 האפליקציה תהיה זמינה ב-`http://localhost:9999`
 
-**אפשרות 2: סביבה וירטואלית של Python**
+**אפשרות 3: סביבה וירטואלית של Python**
 
 ```bash
 # יצירת סביבה וירטואלית
