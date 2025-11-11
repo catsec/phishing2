@@ -64,3 +64,4 @@ htmlcov/
 credentials.json
 secrets.json
 config.local.py
+CLAUDE.md
