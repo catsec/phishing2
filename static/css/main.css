@@ -582,52 +582,6 @@ body.login-page .warning {
     margin-top: 5px;
 }
 
-.alert {
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 20px;
-    display: none;
-    animation: slideIn 0.3s;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.alert-success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.alert-error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.spinner-inline {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 3px solid rgba(255,255,255,.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.8s linear infinite;
-    margin-right: 8px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
 /* ========================================
    HACKER DASHBOARD (TERMINAL THEME)
    ======================================== */
@@ -927,42 +881,6 @@ body.disclaimer-page .info-box {
 
 body.disclaimer-page .info-box h2 {
     color: #1565C0;
-}
-
-body.disclaimer-page .disclaimer-footer {
-    text-align: center;
-    margin-top: 30px;
-    padding: 25px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-body.disclaimer-page .disclaimer-footer p {
-    color: #666;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-body.disclaimer-page .accept-btn {
-    width: 100%;
-    max-width: 500px;
-    padding: 18px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-body.disclaimer-page .accept-btn:hover {
-    background: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 /* ========================================
