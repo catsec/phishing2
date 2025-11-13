@@ -63,6 +63,8 @@
         </div>
     </div>
 
+    <button id="themeToggleBtn" class="theme-toggle-btn">?מה זו הקלישאה הזו</button>
+
     <script>
         let hasCardData = false;
 
@@ -252,6 +254,31 @@
         // Auto-refresh every 2 seconds
         setInterval(updateDashboard, 2000);
         updateDashboard();
+
+        // Theme Toggle Functionality
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const body = document.body;
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('hackerTheme');
+        if (savedTheme === 'modern') {
+            body.classList.add('modern-theme');
+            themeToggleBtn.textContent = 'חזרה לשנות השמונים';
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            if (body.classList.contains('modern-theme')) {
+                // Switch to retro theme
+                body.classList.remove('modern-theme');
+                themeToggleBtn.textContent = '?מה זו הקלישאה הזו';
+                localStorage.setItem('hackerTheme', 'retro');
+            } else {
+                // Switch to modern theme
+                body.classList.add('modern-theme');
+                themeToggleBtn.textContent = 'חזרה לשנות השמונים';
+                localStorage.setItem('hackerTheme', 'modern');
+            }
+        });
     </script>
 
     <div class="demo-footer">
