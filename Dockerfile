@@ -3,7 +3,7 @@ FROM python:3.13-alpine
 WORKDIR /app
 
 # Install dependencies
-RUN pip install --no-cache-dir flask twilio flask-wtf
+RUN pip install --no-cache-dir flask twilio flask-wtf flask-limiter
 
 # Copy application
 COPY phishing_demo.py .

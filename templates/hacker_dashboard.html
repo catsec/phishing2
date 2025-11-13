@@ -152,7 +152,12 @@
 
         function updateDashboard() {
             fetch('/hacker/data')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     // Update card data
                     if (data.card) {
@@ -203,6 +208,10 @@
                     // Update timestamp
                     document.getElementById('lastUpdate').textContent =
                         'Last update: ' + new Date().toLocaleTimeString();
+                })
+                .catch(error => {
+                    console.error('Error fetching dashboard data:', error);
+                    // Don't show error to user, just log it for debugging
                 });
         }
 

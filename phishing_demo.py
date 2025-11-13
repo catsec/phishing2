@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-Combined Phishing & SMS Demo - For Security Awareness Training Only
-Runs phishing demo on / and SMS sender on /sms
+Phishing Awareness Training Demonstration Application - For Security Training Only
+Simulates phishing attack flow with admin control panel for SMS sending
 """
 
 from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from twilio.rest import Client
 from datetime import datetime, timedelta
 from html import escape
@@ -30,6 +32,7 @@ app.secret_key = secrets.token_hex(32)
 # Session security configuration
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 
 # Only set Secure flag if behind HTTPS proxy (not for HTTP-only internal communication)
 # This allows NPM/reverse proxy to handle HTTPS while Docker uses HTTP internally
@@ -40,12 +43,21 @@ if BEHIND_HTTPS_PROXY:
 # Enable CSRF protection
 csrf = CSRFProtect(app)
 
+# Enable rate limiting
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
 # Add security headers
 @app.after_request
 def after_request(response):
     response.headers.add('X-Content-Type-Options', 'nosniff')
     response.headers.add('X-Frame-Options', 'DENY')
     response.headers.add('X-XSS-Protection', '1; mode=block')
+    response.headers.add('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:")
     return response
 
 # Twilio credentials - required from environment
@@ -132,9 +144,30 @@ def validate_phone_number(phone: str) -> bool:
     return bool(re.match(e164_pattern, phone) or re.match(alphanumeric_pattern, phone))
 
 def validate_card_number(card: str) -> bool:
-    """Validate card number (digits only, 13-19 length)"""
+    """Validate card number using Luhn algorithm (digits only, 13-19 length)"""
     digits = card.replace(' ', '')
-    return digits.isdigit() and 13 <= len(digits) <= 19
+
+    # Check if it's all digits and correct length
+    if not digits.isdigit() or not (13 <= len(digits) <= 19):
+        return False
+
+    # Luhn algorithm (mod-10 checksum)
+    def luhn_checksum(card_number: str) -> bool:
+        """Validate card number using Luhn algorithm"""
+        total = 0
+        reverse_digits = card_number[::-1]
+
+        for i, digit in enumerate(reverse_digits):
+            n = int(digit)
+            if i % 2 == 1:  # Every second digit from the right
+                n *= 2
+                if n > 9:
+                    n -= 9
+            total += n
+
+        return total % 10 == 0
+
+    return luhn_checksum(digits)
 
 def validate_cvv(cvv: str) -> bool:
     """Validate CVV (3-4 digits)"""
@@ -167,6 +200,7 @@ def require_auth(f: Callable) -> Callable:
     return decorated_function
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     """Login page for admin access"""
     error = None
@@ -174,8 +208,16 @@ def login():
         username = request.form.get('username', '')
         password = request.form.get('password', '')
 
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        # Use constant-time comparison to prevent timing attacks
+        # Note: compare_digest requires strings to be non-None, already validated by get() default
+        username_match = secrets.compare_digest(username or '', ADMIN_USERNAME or '')
+        password_match = secrets.compare_digest(password or '', ADMIN_PASSWORD or '')
+
+        if username_match and password_match:
+            # Prevent session fixation by regenerating session
+            session.clear()
             session['authenticated'] = True
+            session.permanent = False
             return redirect(url_for('hacker_dashboard'))
         else:
             error = 'Invalid username or password'
@@ -242,7 +284,7 @@ def submit_card():
 
 @app.route('/check_ready', methods=['GET'])
 def check_ready():
-    """Check if ready to show alert"""
+    """Check if ready to show alert (GET-only, no state changes, CSRF not required)"""
     return jsonify({'ready': get_ready_for_alert()})
 
 @app.route('/hacker', methods=['GET'])
@@ -336,6 +378,7 @@ def verify_otp():
 # SMS API Route
 @app.route('/send', methods=['POST'])
 @require_auth
+@limiter.limit("10 per minute")
 def send_sms():
     """Send SMS via Twilio"""
     try:
