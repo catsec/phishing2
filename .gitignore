@@ -65,3 +65,6 @@ credentials.json
 secrets.json
 config.local.py
 CLAUDE.md
+
+# Deployment scripts (contains server info)
+deploy.sh
