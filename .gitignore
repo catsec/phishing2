@@ -66,5 +66,6 @@ secrets.json
 config.local.py
 CLAUDE.md
 
-# Deployment scripts (contains server info)
+# Deployment scripts (contains server info!)
 deploy.sh
+sftp_commands.txt
