@@ -35,9 +35,12 @@ A Flask-based phishing awareness training application that demonstrates:
 - Admin dashboard with SMS sending capability (Twilio integration)
 - Real-time data capture display
 - Hebrew RTL interface for realistic Israeli banking simulation
-- Terminal-style hacker dashboard
-- Session-based authentication
+- Retro 80's hacker dashboard with Fira Code font
+- Theme toggle (classic hacker / modern gradient)
+- Session-based authentication with rate limiting
 - In-memory data storage (nothing persisted)
+- Automatic CSS cache busting via timestamp versioning
+- Cloudflare-compatible cache control headers
 
 ---
 
@@ -110,7 +113,7 @@ python3.13 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install flask twilio flask-wtf
+pip install flask twilio flask-wtf flask-limiter
 
 # Set required environment variables
 export TWILIO_ACCOUNT_SID="your-twilio-sid"
@@ -202,13 +205,38 @@ phishing2/
 
 ### Security Features
 
-- Session-based authentication for admin routes
-- CSRF protection on all forms (Flask-WTF)
-- Input validation and sanitization
-- Security headers (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)
-- Thread-safe state management
-- No persistent data storage (in-memory only)
-- Environment-based configuration (no hardcoded secrets)
+- **Authentication & Sessions:**
+  - Session-based authentication for admin routes
+  - Session fixation protection (regenerates on login)
+  - Constant-time password comparison (prevents timing attacks)
+  - Session timeout (1 hour)
+  - HttpOnly, SameSite=Lax cookies
+  - Optional Secure flag for HTTPS proxy setups
+
+- **Input Protection:**
+  - CSRF protection on all forms (Flask-WTF)
+  - Comprehensive input validation (Luhn algorithm for cards, E.164 for phones)
+  - Input sanitization (HTML escaping)
+  - Length limits on all inputs
+
+- **Rate Limiting:**
+  - Login endpoint: 5 attempts per minute
+  - SMS endpoint: 10 messages per minute
+  - Global limits: 200 per day, 50 per hour
+
+- **Security Headers:**
+  - X-Content-Type-Options: nosniff
+  - X-Frame-Options: DENY
+  - X-XSS-Protection: 1; mode=block
+  - Content-Security-Policy (restricts script/style sources)
+  - Cache-Control: no-cache (prevents caching while allowing sessions)
+  - CDN-Cache-Control: no-cache (Cloudflare-specific)
+
+- **Additional Security:**
+  - Thread-safe state management with locks
+  - No persistent data storage (in-memory only)
+  - Environment-based configuration (no hardcoded secrets)
+  - Auto-generated cryptographic SECRET_KEY per deployment
 
 ---
 
@@ -227,8 +255,13 @@ All configuration via environment variables:
 | `ADMIN_PASSWORD` | Admin login password | password |
 | `PORT` | Application port | 9999 |
 | `FLASK_DEBUG` | Debug mode | false |
+| `BEHIND_HTTPS_PROXY` | Behind HTTPS reverse proxy | false |
+| `DEFAULT_TO_NUMBER` | Default SMS recipient | +9725 |
 
-**Note:** The Flask SECRET_KEY is automatically generated at startup using a cryptographically secure random value. No configuration needed.
+**Notes:**
+- The Flask SECRET_KEY is automatically generated at startup using a cryptographically secure random value
+- CSS version is automatically set based on deployment timestamp for cache busting
+- Set `BEHIND_HTTPS_PROXY=true` if behind Nginx Proxy Manager or similar HTTPS reverse proxies
 
 See `docker-compose.yml` for default values.
 
@@ -258,11 +291,14 @@ See `docker-compose.yml` for default values.
 ### Features
 
 - **Hebrew RTL Support:** Realistic Israeli banking interface
-- **Terminal Theme:** Matrix-style hacker dashboard
+- **Retro Hacker Theme:** 80's terminal aesthetic with Fira Code monospace font
+- **Theme Toggle:** Switch between classic hacker (green on black) and modern gradient themes
 - **Real-time Updates:** Auto-refreshing dashboard (2-second interval)
 - **Reference Number:** 10-digit unique reference based on card data
 - **Flow Control:** Attacker controls victim progression
 - **Prominent Warnings:** Red pulsing disclaimer footer on all pages
+- **Cache Busting:** Timestamp-based CSS versioning prevents caching issues during deployments
+- **CDN Compatible:** Works seamlessly behind Cloudflare and other CDNs
 
 ---
 
@@ -286,10 +322,22 @@ The authors and contributors are not responsible for misuse of this software.
 - Python 3.13
 - Flask 3.1+
 - Flask-WTF (CSRF protection)
+- Flask-Limiter 3.5+ (rate limiting)
 - Twilio Python SDK
 - Docker
 
+**Fonts:**
+- Fira Code (Google Fonts) - Hacker dashboard
+
 **Created by:** catsec.com
+
+**Recent Updates:**
+- Added timestamp-based CSS cache busting for reliable deployments
+- Implemented comprehensive cache control headers (browser + Cloudflare)
+- Added theme toggle with retro hacker and modern gradient options
+- Switched to Fira Code font for authentic 80's terminal aesthetic
+- Enhanced security with rate limiting and timing attack protection
+- Fixed CSRF token handling with session-compatible cache headers
 
 ---
 
@@ -324,9 +372,12 @@ The authors and contributors are not responsible for misuse of this software.
 - לוח ניהול מנהל עם יכולת שליחת SMS (אינטגרציית Twilio)
 - תצוגת לכידת נתונים בזמן אמת
 - ממשק עברי RTL לסימולציה ריאליסטית של בנקאות ישראלית
-- לוח בקרה בסגנון טרמינל
-- אימות מבוסס session
+- לוח בקרה רטרו בסגנון שנות ה-80 עם פונט Fira Code
+- החלפת ערכות נושא (האקר קלאסי / גרדיאנט מודרני)
+- אימות מבוסס session עם הגבלת קצב
 - אחסון נתונים בזיכרון (שום דבר לא נשמר)
+- ביטול מטמון CSS אוטומטי באמצעות גרסה מבוססת timestamp
+- תאימות לכותרות בקרת מטמון של Cloudflare
 
 ---
 
@@ -399,7 +450,7 @@ python3.13 -m venv venv
 source venv/bin/activate  # ב-Windows: venv\Scripts\activate
 
 # התקנת תלויות
-pip install flask twilio flask-wtf
+pip install flask twilio flask-wtf flask-limiter
 
 # הגדרת משתני סביבה נדרשים
 export TWILIO_ACCOUNT_SID="your-twilio-sid"
@@ -491,13 +542,38 @@ phishing2/
 
 ### תכונות אבטחה
 
-- אימות מבוסס session למסלולי מנהל
-- הגנת CSRF על כל הטפסים (Flask-WTF)
-- אימות וחיטוי קלט
-- כותרות אבטחה (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)
-- ניהול מצב thread-safe
-- אין אחסון נתונים קבוע (בזיכרון בלבד)
-- תצורה מבוססת סביבה (אין סודות מוקשים)
+- **אימות ו-Sessions:**
+  - אימות מבוסס session למסלולי מנהל
+  - הגנה מפני session fixation (יצירה מחדש בהתחברות)
+  - השוואת סיסמאות בזמן קבוע (מניעת התקפות timing)
+  - פג תוקף session (שעה אחת)
+  - עוגיות HttpOnly, SameSite=Lax
+  - דגל Secure אופציונלי להגדרות HTTPS proxy
+
+- **הגנת קלט:**
+  - הגנת CSRF על כל הטפסים (Flask-WTF)
+  - אימות קלט מקיף (אלגוריתם Luhn לכרטיסים, E.164 לטלפונים)
+  - חיטוי קלט (HTML escaping)
+  - הגבלות אורך על כל הקלטים
+
+- **הגבלת קצב:**
+  - נקודת התחברות: 5 ניסיונות לדקה
+  - נקודת SMS: 10 הודעות לדקה
+  - הגבלות גלובליות: 200 ליום, 50 לשעה
+
+- **כותרות אבטחה:**
+  - X-Content-Type-Options: nosniff
+  - X-Frame-Options: DENY
+  - X-XSS-Protection: 1; mode=block
+  - Content-Security-Policy (מגביל מקורות script/style)
+  - Cache-Control: no-cache (מונע caching תוך כדי שמירת sessions)
+  - CDN-Cache-Control: no-cache (ספציפי ל-Cloudflare)
+
+- **אבטחה נוספת:**
+  - ניהול מצב thread-safe עם locks
+  - אין אחסון נתונים קבוע (בזיכרון בלבד)
+  - תצורה מבוססת סביבה (אין סודות מוקשים)
+  - SECRET_KEY קריפטוגרפי אוטומטי לכל deployment
 
 ---
 
@@ -516,8 +592,13 @@ phishing2/
 | `ADMIN_PASSWORD` | סיסמת מנהל | password |
 | `PORT` | פורט אפליקציה | 9999 |
 | `FLASK_DEBUG` | מצב debug | false |
+| `BEHIND_HTTPS_PROXY` | מאחורי reverse proxy של HTTPS | false |
+| `DEFAULT_TO_NUMBER` | נמען SMS ברירת מחדל | +9725 |
 
-**הערה:** ה-SECRET_KEY של Flask נוצר אוטומטית בהפעלה באמצעות ערך אקראי מאובטח קריפטוגרפית. אין צורך בתצורה.
+**הערות:**
+- ה-SECRET_KEY של Flask נוצר אוטומטית בהפעלה באמצעות ערך אקראי מאובטח קריפטוגרפית
+- גרסת CSS מוגדרת אוטומטית על בסיס timestamp של deployment לביטול מטמון
+- הגדר `BEHIND_HTTPS_PROXY=true` אם מאחורי Nginx Proxy Manager או reverse proxies דומים של HTTPS
 
 ראה `docker-compose.yml` לערכי ברירת מחדל.
 
@@ -547,11 +628,14 @@ phishing2/
 ### תכונות
 
 - **תמיכה בעברית RTL:** ממשק בנקאי ישראלי ריאליסטי
-- **ערכת טרמינל:** לוח בקרה בסגנון Matrix
+- **ערכת נושא האקר רטרו:** אסתטיקה של טרמינל משנות ה-80 עם פונט Fira Code monospace
+- **החלפת ערכות נושא:** מעבר בין האקר קלאסי (ירוק על שחור) לערכות נושא גרדיאנט מודרניות
 - **עדכונים בזמן אמת:** לוח בקרה מתרענן אוטומטית (מרווח של 2 שניות)
 - **מספר אסמכתא:** אסמכתא ייחודית בת 10 ספרות מבוססת נתוני כרטיס
 - **בקרת זרימה:** התוקף שולט בהתקדמות הקורבן
 - **אזהרות בולטות:** כותרת אזהרה אדומה פועמת בכל הדפים
+- **ביטול מטמון:** גרסה מבוססת timestamp של CSS מונעת בעיות caching במהלך deployments
+- **תאימות CDN:** עובד בצורה חלקה מאחורי Cloudflare ו-CDNs אחרים
 
 ---
 
@@ -575,10 +659,22 @@ phishing2/
 - Python 3.13
 - Flask 3.1+
 - Flask-WTF (הגנת CSRF)
+- Flask-Limiter 3.5+ (הגבלת קצב)
 - Twilio Python SDK
 - Docker
 
+**פונטים:**
+- Fira Code (Google Fonts) - לוח בקרה האקר
+
 **נוצר על ידי:** catsec.com
+
+**עדכונים אחרונים:**
+- נוסף ביטול מטמון CSS מבוסס timestamp עבור deployments אמינים
+- יושמו כותרות בקרת מטמון מקיפות (דפדפן + Cloudflare)
+- נוספה החלפת ערכות נושא עם אפשרויות האקר רטרו וגרדיאנט מודרני
+- מעבר לפונט Fira Code עבור אסתטיקה אותנטית של טרמינל משנות ה-80
+- שיפור אבטחה עם הגבלת קצב והגנה מפני התקפות timing
+- תוקן טיפול ב-token CSRF עם כותרות מטמון תואמות session
 
 ---
 
