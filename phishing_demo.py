@@ -6,8 +6,6 @@ Simulates phishing attack flow with admin control panel for SMS sending
 
 from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from twilio.rest import Client
 from datetime import datetime, timedelta
 from html import escape
@@ -45,14 +43,6 @@ if BEHIND_HTTPS_PROXY:
 
 # Enable CSRF protection
 csrf = CSRFProtect(app)
-
-# Enable rate limiting
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://"
-)
 
 # Make CSS_VERSION available to all templates
 @app.context_processor
@@ -218,7 +208,6 @@ def require_auth(f: Callable) -> Callable:
     return decorated_function
 
 @app.route('/login', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
 def login():
     """Login page for admin access"""
     error = None
@@ -396,7 +385,6 @@ def verify_otp():
 # SMS API Route
 @app.route('/send', methods=['POST'])
 @require_auth
-@limiter.limit("10 per minute")
 def send_sms():
     """Send SMS via Twilio"""
     try:

@@ -220,9 +220,7 @@ phishing2/
   - Length limits on all inputs
 
 - **Rate Limiting:**
-  - Login endpoint: 5 attempts per minute
-  - SMS endpoint: 10 messages per minute
-  - Global limits: 200 per day, 50 per hour
+  - No application-level rate limiting (handled by Cloudflare)
 
 - **Security Headers:**
   - X-Content-Type-Options: nosniff
@@ -322,8 +320,8 @@ The authors and contributors are not responsible for misuse of this software.
 - Python 3.13
 - Flask 3.1+
 - Flask-WTF (CSRF protection)
-- Flask-Limiter 3.5+ (rate limiting)
 - Twilio Python SDK
+- Gunicorn (production WSGI server)
 - Docker
 
 **Fonts:**
@@ -332,11 +330,13 @@ The authors and contributors are not responsible for misuse of this software.
 **Created by:** catsec.com
 
 **Recent Updates:**
+- Removed application-level rate limiting (now handled by Cloudflare)
+- Switched to production-ready Gunicorn server (replaced Flask dev server)
 - Added timestamp-based CSS cache busting for reliable deployments
 - Implemented comprehensive cache control headers (browser + Cloudflare)
 - Added theme toggle with retro hacker and modern gradient options
 - Switched to Fira Code font for authentic 80's terminal aesthetic
-- Enhanced security with rate limiting and timing attack protection
+- Enhanced security with timing attack protection and CSRF validation
 - Fixed CSRF token handling with session-compatible cache headers
 
 ---
@@ -557,9 +557,7 @@ phishing2/
   - הגבלות אורך על כל הקלטים
 
 - **הגבלת קצב:**
-  - נקודת התחברות: 5 ניסיונות לדקה
-  - נקודת SMS: 10 הודעות לדקה
-  - הגבלות גלובליות: 200 ליום, 50 לשעה
+  - אין הגבלת קצב ברמת האפליקציה (מטופל על ידי Cloudflare)
 
 - **כותרות אבטחה:**
   - X-Content-Type-Options: nosniff
@@ -659,8 +657,8 @@ phishing2/
 - Python 3.13
 - Flask 3.1+
 - Flask-WTF (הגנת CSRF)
-- Flask-Limiter 3.5+ (הגבלת קצב)
 - Twilio Python SDK
+- Gunicorn (שרת WSGI לייצור)
 - Docker
 
 **פונטים:**
@@ -669,11 +667,13 @@ phishing2/
 **נוצר על ידי:** catsec.com
 
 **עדכונים אחרונים:**
+- הוסרה הגבלת קצב ברמת האפליקציה (מטופל כעת על ידי Cloudflare)
+- מעבר לשרת Gunicorn ייצור (החלפת שרת הפיתוח של Flask)
 - נוסף ביטול מטמון CSS מבוסס timestamp עבור deployments אמינים
 - יושמו כותרות בקרת מטמון מקיפות (דפדפן + Cloudflare)
 - נוספה החלפת ערכות נושא עם אפשרויות האקר רטרו וגרדיאנט מודרני
 - מעבר לפונט Fira Code עבור אסתטיקה אותנטית של טרמינל משנות ה-80
-- שיפור אבטחה עם הגבלת קצב והגנה מפני התקפות timing
+- שיפור אבטחה עם הגנה מפני התקפות timing ואימות CSRF
 - תוקן טיפול ב-token CSRF עם כותרות מטמון תואמות session
 
 ---

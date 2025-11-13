@@ -1,5 +1,4 @@
 flask>=3.1.0
 twilio>=9.0.0
 flask-wtf>=1.2.0
-flask-limiter>=3.5.0
 gunicorn>=21.2.0
