@@ -170,11 +170,6 @@
                         cardDataDiv.appendChild(createDataRow('Expiry:', data.card.expiry_date));
                         cardDataDiv.appendChild(createDataRow('CVV:', data.card.cvv));
 
-                        const timestamp = document.createElement('div');
-                        timestamp.className = 'timestamp';
-                        timestamp.textContent = data.card.timestamp;
-                        cardDataDiv.appendChild(timestamp);
-
                         const continueBtn = document.getElementById('continueBtn');
                         continueBtn.disabled = false;
                         continueBtn.classList.add('flash');
@@ -198,11 +193,6 @@
                         otpDiv.appendChild(label);
                         otpDiv.appendChild(value);
                         otpDataDiv.appendChild(otpDiv);
-
-                        const timestamp = document.createElement('div');
-                        timestamp.className = 'timestamp';
-                        timestamp.textContent = data.otp.timestamp;
-                        otpDataDiv.appendChild(timestamp);
                     }
 
                     // Update timestamp
@@ -265,7 +255,7 @@
     </script>
 
     <div class="demo-footer">
-        אזהרה: זהו אתר הדגמה של פישינג מבית catsec.com - אל תשתמש במידע אמיתי | למידע נוסף לחץ <a href="/disclaimer" target="_blank">כאן</a>
+        אזהרה: זהו אתר הדגמה של פישינג מבית catsec - אל תשתמש במידע אמיתי | למידע נוסף לחץ <a href="/disclaimer" target="_blank">כאן</a>
     </div>
 </body>
 </html>

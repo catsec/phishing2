@@ -3,6 +3,9 @@
  * Consolidated and optimized CSS for all pages
  */
 
+/* Import web fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 /* ========================================
    GLOBAL RESET & BASE STYLES
    ======================================== */
@@ -20,6 +23,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    padding-bottom: 100px;
 }
 
 /* ========================================
@@ -40,10 +44,11 @@ body.alert-page {
 body.hacker-page {
     background: #0a0a0a;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
+    font-family: 'VT323', monospace;
     align-items: center;
     flex-direction: column;
     padding: 20px;
+    padding-bottom: 100px;
 }
 
 /* ========================================
@@ -81,24 +86,24 @@ body.login-page .login-container {
 
 body.login-page .header h1 {
     color: #00ff00;
-    font-size: 14px;
-    font-weight: bold;
-    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: normal;
+    font-family: 'VT323', monospace;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 body.login-page .header p {
     color: #00ff00;
-    font-size: 14px;
-    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-family: 'VT323', monospace;
 }
 
 body.login-page label {
     color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    font-weight: bold;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 body.login-page input {
@@ -106,8 +111,8 @@ body.login-page input {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
 }
 
 body.login-page input:focus {
@@ -120,9 +125,9 @@ body.login-page .submit-btn {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    font-weight: bold;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    font-weight: normal;
     text-transform: uppercase;
 }
 
@@ -137,9 +142,9 @@ body.login-page .warning {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    font-weight: bold;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 body.login-page .error {
@@ -147,8 +152,8 @@ body.login-page .error {
     border: 1px solid #00ff00;
     color: #00ff00;
     border-radius: 0;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
 }
 
 /* Loading page specific container */
@@ -639,15 +644,15 @@ body.hacker-page .header {
 
 body.hacker-page .header h1 {
     color: #000000;
-    font-size: 16px;
+    font-size: 22px;
     margin-bottom: 10px;
-    font-weight: bold;
+    font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 body.hacker-page .status {
-    font-size: 16px;
+    font-size: 20px;
     color: #000000;
 }
 
@@ -673,8 +678,8 @@ body.hacker-page .panel {
 body.hacker-page .panel h2 {
     color: #00ff00;
     margin-bottom: 15px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 22px;
+    font-weight: normal;
     text-transform: uppercase;
     border-bottom: 1px solid #00ff00;
     padding-bottom: 10px;
@@ -696,7 +701,7 @@ body.hacker-page .data-label {
 
 body.hacker-page .data-value {
     color: #00ff00;
-    font-family: 'Courier New', monospace;
+    font-family: 'VT323', monospace;
 }
 
 body.hacker-page .no-data {
@@ -713,13 +718,13 @@ body.hacker-page .control-btn {
     color: #00ff00;
     border: 1px solid #00ff00;
     border-radius: 0;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 22px;
+    font-weight: normal;
     cursor: pointer;
     transition: all 0.3s;
     margin-top: 20px;
     text-transform: uppercase;
-    font-family: 'Courier New', monospace;
+    font-family: 'VT323', monospace;
 }
 
 body.hacker-page .control-btn:hover {
@@ -747,7 +752,7 @@ body.hacker-page .control-btn.flash::after {
 
 body.hacker-page .timestamp {
     color: #00ff00;
-    font-size: 16px;
+    font-size: 20px;
     text-align: right;
     margin-top: 10px;
 }
@@ -770,9 +775,9 @@ body.hacker-page .sms-field {
 body.hacker-page .sms-field label {
     display: block;
     color: #00ff00;
-    font-weight: bold;
+    font-weight: normal;
     margin-bottom: 8px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 body.hacker-page .sms-field input,
@@ -783,8 +788,8 @@ body.hacker-page .sms-field textarea {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
 }
 
 body.hacker-page .sms-field input:focus,
@@ -803,7 +808,7 @@ body.hacker-page .sms-field textarea {
 
 body.hacker-page .char-count {
     text-align: right;
-    font-size: 16px;
+    font-size: 18px;
     color: #00ff00;
     margin-top: 5px;
 }
@@ -812,8 +817,8 @@ body.hacker-page .sms-alert {
     margin-top: 15px;
     padding: 12px;
     border-radius: 0;
-    font-size: 16px;
-    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-family: 'VT323', monospace;
 }
 
 body.hacker-page .sms-alert-success {
