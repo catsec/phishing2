@@ -29,6 +29,9 @@ app = Flask(__name__)
 # Generate a random secret key for each run since data is in-memory only
 app.secret_key = secrets.token_hex(32)
 
+# CSS version based on application startup time (changes on every deployment)
+CSS_VERSION = str(int(datetime.now().timestamp()))
+
 # Session security configuration
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -50,6 +53,11 @@ limiter = Limiter(
     default_limits=["200 per day", "50 per hour"],
     storage_uri="memory://"
 )
+
+# Make CSS_VERSION available to all templates
+@app.context_processor
+def inject_css_version():
+    return {'css_version': CSS_VERSION}
 
 # Add security headers
 @app.after_request
