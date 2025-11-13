@@ -443,22 +443,5 @@ def send_sms():
         app.logger.error(f"Error sending SMS: {str(e)}")
         return jsonify({'error': 'Failed to send SMS. Please check your credentials and try again.'}), 500
 
-if __name__ == '__main__':
-    # Get port from environment variable (required)
-    port_str = os.getenv('PORT')
-    if not port_str:
-        raise ValueError("PORT environment variable is required")
-
-    try:
-        port = int(port_str)
-    except ValueError as e:
-        raise ValueError(f"PORT must be a valid integer, got: {port_str}") from None
-
-    # Get debug mode from environment variable (required)
-    debug_str = os.getenv('FLASK_DEBUG')
-    if not debug_str:
-        raise ValueError("FLASK_DEBUG environment variable is required (set to 'true' or 'false')")
-
-    debug = debug_str.lower() == 'true'
-
-    app.run(debug=debug, host='0.0.0.0', port=port)
+# Gunicorn will import and run this app directly
+# No need for if __name__ == '__main__' block when using Gunicorn
