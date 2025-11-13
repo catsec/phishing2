@@ -4,7 +4,7 @@
  */
 
 /* Import web fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap');
 
 /* ========================================
    GLOBAL RESET & BASE STYLES
@@ -44,7 +44,7 @@ body.alert-page {
 body.hacker-page {
     background: #0a0a0a;
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     align-items: center;
     flex-direction: column;
     padding: 20px;
@@ -88,7 +88,7 @@ body.login-page .header h1 {
     color: #00ff00;
     font-size: 18px;
     font-weight: normal;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -96,12 +96,12 @@ body.login-page .header h1 {
 body.login-page .header p {
     color: #00ff00;
     font-size: 18px;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
 }
 
 body.login-page label {
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 18px;
     font-weight: normal;
 }
@@ -111,7 +111,7 @@ body.login-page input {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 20px;
 }
 
@@ -125,7 +125,7 @@ body.login-page .submit-btn {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 20px;
     font-weight: normal;
     text-transform: uppercase;
@@ -142,7 +142,7 @@ body.login-page .warning {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 18px;
     font-weight: normal;
 }
@@ -152,7 +152,7 @@ body.login-page .error {
     border: 1px solid #00ff00;
     color: #00ff00;
     border-radius: 0;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 18px;
 }
 
@@ -701,7 +701,7 @@ body.hacker-page .data-label {
 
 body.hacker-page .data-value {
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
 }
 
 body.hacker-page .no-data {
@@ -724,7 +724,7 @@ body.hacker-page .control-btn {
     transition: all 0.3s;
     margin-top: 20px;
     text-transform: uppercase;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
 }
 
 body.hacker-page .control-btn:hover {
@@ -788,7 +788,7 @@ body.hacker-page .sms-field textarea {
     border: 1px solid #00ff00;
     border-radius: 0;
     color: #00ff00;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 20px;
 }
 
@@ -818,7 +818,7 @@ body.hacker-page .sms-alert {
     padding: 12px;
     border-radius: 0;
     font-size: 20px;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
 }
 
 body.hacker-page .sms-alert-success {
@@ -1189,7 +1189,7 @@ body.hacker-page.modern-theme .sms-alert-error {
     border: 2px solid #00ff00;
     border-radius: 0;
     font-size: 16px;
-    font-family: 'VT323', monospace;
+    font-family: 'Fira Code', monospace;
     cursor: pointer;
     transition: all 0.3s;
     z-index: 9998;
