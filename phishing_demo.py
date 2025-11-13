@@ -58,6 +58,15 @@ def after_request(response):
     response.headers.add('X-Frame-Options', 'DENY')
     response.headers.add('X-XSS-Protection', '1; mode=block')
     response.headers.add('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:")
+
+    # Cache control headers - prevent browser and CDN caching
+    response.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.add('Pragma', 'no-cache')
+    response.headers.add('Expires', '0')
+
+    # Cloudflare-specific header to bypass cache
+    response.headers.add('CDN-Cache-Control', 'no-store')
+
     return response
 
 # Twilio credentials - required from environment
