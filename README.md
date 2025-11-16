@@ -34,6 +34,7 @@ A Flask-based phishing awareness training application that demonstrates:
 - Multi-stage phishing flow (card capture → transaction alert → OTP)
 - Admin dashboard with SMS sending capability (Twilio integration)
 - Real-time data capture display
+- **Comprehensive activity logging** - Track all hacker and victim activities
 - Hebrew RTL interface for realistic Israeli banking simulation
 - Retro 80's hacker dashboard with Fira Code font
 - Theme toggle (classic hacker / modern gradient)
@@ -139,7 +140,9 @@ python phishing_demo.py
    - View captured OTP codes
    - Send SMS messages via Twilio
    - Control victim flow (advance to next stage)
-   - Clear data for new demonstrations
+   - Monitor all activity in real-time logs
+   - Clear data for new demonstrations (logs persist)
+   - Clear activity logs independently
 
 3. **SMS Sending:**
    - Enter "from" number (can be alphanumeric like "Cal")
@@ -272,10 +275,12 @@ See `docker-compose.yml` for default values.
 
 **Admin Routes (Authentication Required):**
 - `/login` - Admin login page
-- `/hacker` - Main dashboard
+- `/hacker` - Main dashboard with activity logs
 - `/hacker/data` - JSON API for captured data
+- `/hacker/logs` - JSON API for activity logs
 - `/hacker/continue` - Advance victim flow
-- `/hacker/clear` - Clear all captured data
+- `/hacker/clear` - Clear captured data (logs persist)
+- `/hacker/clear_logs` - Clear activity logs
 - `/send` - SMS sending API
 
 ---
@@ -286,6 +291,14 @@ See `docker-compose.yml` for default values.
 - **Retro Hacker Theme:** 80's terminal aesthetic with Fira Code monospace font
 - **Theme Toggle:** Switch between classic hacker (green on black) and modern gradient themes
 - **Real-time Updates:** Auto-refreshing dashboard (2-second interval)
+- **Comprehensive Activity Logs:**
+  - Track all hacker actions (login attempts, SMS sending, flow control)
+  - Track all victim actions (page access, data entry, validation failures)
+  - Real-time log viewer with filtering (All/Hacker/Victim)
+  - Scrollable table (75vh height) with sticky header
+  - Automatic log rotation at 10,000 entries
+  - Color-coded entries with success/fail highlighting
+  - Independent log clearing (preserves logs when clearing captured data)
 - **Reference Number:** 10-digit unique reference based on card data
 - **Flow Control:** Attacker controls victim progression
 - **Prominent Warnings:** Red pulsing disclaimer footer on all pages
@@ -324,6 +337,13 @@ The authors and contributors are not responsible for misuse of this software.
 **Created by:** catsec.com
 
 **Recent Updates:**
+- **NEW: Comprehensive Activity Logging System**
+  - Real-time tracking of all hacker and victim activities
+  - Filterable log viewer with 75vh scrollable table
+  - Automatic log rotation at 10,000 entries
+  - Independent log clearing (logs persist when clearing captured data)
+  - IP address tracking with proxy header support
+  - Color-coded success/fail indicators
 - Removed application-level rate limiting (now handled by Cloudflare)
 - Switched to production-ready Gunicorn server (replaced Flask dev server)
 - Added timestamp-based CSS cache busting for reliable deployments
@@ -470,7 +490,9 @@ python phishing_demo.py
    - צפייה בקודי OTP שנלכדו
    - שליחת הודעות SMS דרך Twilio
    - שליטה בזרימת הקורבן (קידום לשלב הבא)
-   - ניקוי נתונים להדגמות חדשות
+   - מעקב אחר כל הפעילות בלוגים בזמן אמת
+   - ניקוי נתונים להדגמות חדשות (הלוגים נשמרים)
+   - ניקוי לוגי פעילות באופן עצמאי
 
 3. **שליחת SMS:**
    - הזנת מספר "מאת" (יכול להיות אלפאנומרי כמו "Cal")
@@ -603,10 +625,12 @@ phishing2/
 
 **מסלולי מנהל (נדרש אימות):**
 - `/login` - דף התחברות מנהל
-- `/hacker` - לוח בקרה ראשי
+- `/hacker` - לוח בקרה ראשי עם לוגי פעילות
 - `/hacker/data` - API JSON לנתונים שנלכדו
+- `/hacker/logs` - API JSON ללוגי פעילות
 - `/hacker/continue` - קידום זרימת קורבן
-- `/hacker/clear` - ניקוי כל הנתונים שנלכדו
+- `/hacker/clear` - ניקוי נתונים שנלכדו (הלוגים נשמרים)
+- `/hacker/clear_logs` - ניקוי לוגי פעילות
 - `/send` - API שליחת SMS
 
 ---
@@ -655,6 +679,13 @@ phishing2/
 **נוצר על ידי:** catsec.com
 
 **עדכונים אחרונים:**
+- **חדש: מערכת לוגי פעילות מקיפה**
+  - מעקב בזמן אמת אחר כל פעילויות התוקף והקורבן
+  - מציג לוגים ניתן לסינון עם טבלה גלילה בגובה 75vh
+  - סבב אוטומטי של לוגים ב-10,000 רשומות
+  - ניקוי לוגים עצמאי (הלוגים נשמרים בעת ניקוי נתונים שנלכדו)
+  - מעקב כתובות IP עם תמיכה בכותרות proxy
+  - אינדיקטורים צבעוניים להצלחה/כישלון
 - הוסרה הגבלת קצב ברמת האפליקציה (מטופל כעת על ידי Cloudflare)
 - מעבר לשרת Gunicorn ייצור (החלפת שרת הפיתוח של Flask)
 - נוסף ביטול מטמון CSS מבוסס timestamp עבור deployments אמינים

@@ -1134,3 +1134,137 @@ body.hacker-page.modern-theme .theme-toggle-btn:hover {
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     transform: translateX(-50%) translateY(-2px);
 }
+
+/* ========================================
+   ACTIVITY LOGS (HACKER DASHBOARD)
+   ======================================== */
+
+body.hacker-page .log-filters {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #00ff00;
+}
+
+body.hacker-page .log-filters label {
+    color: #00ff00;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+body.hacker-page .log-filters input[type="radio"] {
+    width: auto;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+body.hacker-page .log-container {
+    overflow-x: auto;
+    max-height: 75vh;
+    overflow-y: auto;
+    border: 1px solid #00ff00;
+}
+
+body.hacker-page .log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Fira Code', monospace;
+    font-size: 16px;
+}
+
+body.hacker-page .log-table thead {
+    position: sticky;
+    top: 0;
+    background: #000000;
+    z-index: 10;
+}
+
+body.hacker-page .log-table th {
+    color: #00ff00;
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 2px solid #00ff00;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+body.hacker-page .log-table td {
+    color: #00ff00;
+    padding: 10px 8px;
+    border-bottom: 1px solid #003300;
+}
+
+body.hacker-page .log-table tbody tr:hover {
+    background: #001a00;
+}
+
+body.hacker-page .log-type-hacker {
+    color: #ffff00;
+    font-weight: bold;
+}
+
+body.hacker-page .log-type-victim {
+    color: #ff6600;
+    font-weight: bold;
+}
+
+body.hacker-page .log-success {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+body.hacker-page .log-fail {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+/* Modern theme overrides for logs */
+body.hacker-page.modern-theme .log-filters {
+    border-bottom: 2px solid #e0e0e0;
+}
+
+body.hacker-page.modern-theme .log-filters label {
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+body.hacker-page.modern-theme .log-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+body.hacker-page.modern-theme .log-table th {
+    color: #667eea;
+    border-bottom: 2px solid #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+body.hacker-page.modern-theme .log-table td {
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+body.hacker-page.modern-theme .log-table tbody tr:hover {
+    background: #f5f5f5;
+}
+
+body.hacker-page.modern-theme .log-type-hacker {
+    color: #667eea;
+}
+
+body.hacker-page.modern-theme .log-type-victim {
+    color: #ff6600;
+}
+
+body.hacker-page.modern-theme .log-success {
+    color: #4CAF50;
+}
+
+body.hacker-page.modern-theme .log-fail {
+    color: #f44336;
+}

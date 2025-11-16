@@ -64,6 +64,37 @@
             <button id="clearBtn" class="control-btn" style="margin-top: 10px;">Clear Data</button>
             <div class="timestamp" id="lastUpdate">Auto-refresh active...</div>
         </div>
+
+        <!-- Activity Logs Panel -->
+        <div class="panel full-width">
+            <h2>Activity Logs</h2>
+            <div class="log-filters">
+                <label><input type="radio" name="logFilter" value="all" checked> All</label>
+                <label><input type="radio" name="logFilter" value="hacker"> Hacker</label>
+                <label><input type="radio" name="logFilter" value="victim"> Victim</label>
+                <button id="clearLogsBtn" class="control-btn" style="margin-left: auto; width: auto; padding: 8px 20px; font-size: 16px;">Clear Logs</button>
+            </div>
+            <div class="log-container">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>DateTime</th>
+                            <th>IP Address</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Outcome</th>
+                            <th>Last 4 Digits</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody">
+                        <tr>
+                            <td colspan="7" class="no-data">No activity logged yet...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <button id="themeToggleBtn" class="theme-toggle-btn">?מה זו הקלישאה הזו</button>
@@ -257,6 +288,117 @@
         // Auto-refresh every 2 seconds
         setInterval(updateDashboard, 2000);
         updateDashboard();
+
+        // Activity Logs Functionality
+        let currentLogFilter = 'all';
+
+        function updateActivityLogs() {
+            fetch('/hacker/logs')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const logTableBody = document.getElementById('logTableBody');
+                    const logs = data.logs || [];
+
+                    // Filter logs based on selected filter
+                    const filteredLogs = logs.filter(log => {
+                        if (currentLogFilter === 'all') return true;
+                        return log.type === currentLogFilter;
+                    });
+
+                    if (filteredLogs.length === 0) {
+                        logTableBody.innerHTML = '<tr><td colspan="7" class="no-data">No activity logged yet...</td></tr>';
+                        return;
+                    }
+
+                    // Sort logs by datetime in descending order (newest first)
+                    filteredLogs.sort((a, b) => {
+                        return new Date(b.datetime) - new Date(a.datetime);
+                    });
+
+                    // Build table rows
+                    logTableBody.innerHTML = '';
+                    filteredLogs.forEach(log => {
+                        const row = document.createElement('tr');
+                        row.className = `log-row-${log.type}`;
+
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = log.type.toUpperCase();
+                        typeCell.className = `log-type-${log.type}`;
+
+                        const datetimeCell = document.createElement('td');
+                        datetimeCell.textContent = log.datetime;
+
+                        const ipCell = document.createElement('td');
+                        ipCell.textContent = log.ip;
+
+                        const userCell = document.createElement('td');
+                        userCell.textContent = log.user || '-';
+
+                        const actionCell = document.createElement('td');
+                        actionCell.textContent = log.action;
+
+                        const outcomeCell = document.createElement('td');
+                        outcomeCell.textContent = log.outcome;
+                        outcomeCell.className = log.outcome.toLowerCase().includes('success') ? 'log-success' : 'log-fail';
+
+                        const last4Cell = document.createElement('td');
+                        last4Cell.textContent = log.last_4_digits || '-';
+
+                        row.appendChild(typeCell);
+                        row.appendChild(datetimeCell);
+                        row.appendChild(ipCell);
+                        row.appendChild(userCell);
+                        row.appendChild(actionCell);
+                        row.appendChild(outcomeCell);
+                        row.appendChild(last4Cell);
+
+                        logTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching activity logs:', error);
+                });
+        }
+
+        // Log filter handlers
+        document.querySelectorAll('input[name="logFilter"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                currentLogFilter = this.value;
+                updateActivityLogs();
+            });
+        });
+
+        // Clear Logs button handler
+        document.getElementById('clearLogsBtn').addEventListener('click', function() {
+            if (confirm('Clear all activity logs? This cannot be undone.')) {
+                const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+                fetch('/hacker/clear_logs', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Immediately update the logs display
+                            updateActivityLogs();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error clearing logs:', error);
+                    });
+            }
+        });
+
+        // Auto-refresh logs every 3 seconds
+        setInterval(updateActivityLogs, 3000);
+        updateActivityLogs();
 
         // Theme Toggle Functionality
         const themeToggleBtn = document.getElementById('themeToggleBtn');
