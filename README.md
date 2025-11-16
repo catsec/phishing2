@@ -59,41 +59,35 @@ A Flask-based phishing awareness training application that demonstrates:
 # Pull the pre-built image from Docker Hub
 docker pull ramprass/phishing-demo:latest
 
-# Create .env file with your credentials
-cat > .env <<'EOF'
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-DEFAULT_FROM_NUMBER=BANK
-DEFAULT_SMS_MESSAGE=Your SMS message here
-COMPANY_HEBREW=בנק
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=change_this_password
-PORT=9999
-FLASK_DEBUG=false
-BEHIND_HTTPS_PROXY=false
-DEFAULT_TO_NUMBER=+9725
-EOF
-
-# Run the container
+# Run the container with environment variables
 docker run -d \
   --name phishing-demo \
   -p 9999:9999 \
-  --env-file .env \
+  -e TWILIO_ACCOUNT_SID=your_twilio_sid \
+  -e TWILIO_AUTH_TOKEN=your_twilio_token \
+  -e DEFAULT_FROM_NUMBER=BANK \
+  -e DEFAULT_SMS_MESSAGE="Your SMS message here" \
+  -e COMPANY_HEBREW=בנק \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=change_this_password \
+  -e PORT=9999 \
+  -e FLASK_DEBUG=false \
+  -e BEHIND_HTTPS_PROXY=false \
+  -e DEFAULT_TO_NUMBER=+9725 \
   ramprass/phishing-demo:latest
 ```
 
 The application will be available at `http://localhost:9999`
 
-**Option 2: Docker Compose (Build from Source)**
+**Option 2: Docker Compose (Recommended)**
 
 ```bash
 # Clone the repository
 git clone https://github.com/catsec/phishing2.git
 cd phishing2
 
-# Copy example .env and configure your credentials
-cp .env.example .env
-# Edit .env with your actual credentials
+# Edit docker-compose.yml and configure your credentials
+# Change TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and other values
 
 # ⚠️ SECURITY WARNING: Change the default admin credentials!
 
@@ -396,41 +390,35 @@ The authors and contributors are not responsible for misuse of this software.
 # משיכת ה-image המוכן מ-Docker Hub
 docker pull ramprass/phishing-demo:latest
 
-# יצירת קובץ .env עם האישורים שלך
-cat > .env <<'EOF'
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-DEFAULT_FROM_NUMBER=BANK
-DEFAULT_SMS_MESSAGE=הודעת SMS שלך כאן
-COMPANY_HEBREW=בנק
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=change_this_password
-PORT=9999
-FLASK_DEBUG=false
-BEHIND_HTTPS_PROXY=false
-DEFAULT_TO_NUMBER=+9725
-EOF
-
-# הרצת ה-container
+# הרצת ה-container עם משתני סביבה
 docker run -d \
   --name phishing-demo \
   -p 9999:9999 \
-  --env-file .env \
+  -e TWILIO_ACCOUNT_SID=your_twilio_sid \
+  -e TWILIO_AUTH_TOKEN=your_twilio_token \
+  -e DEFAULT_FROM_NUMBER=BANK \
+  -e DEFAULT_SMS_MESSAGE="הודעת SMS שלך כאן" \
+  -e COMPANY_HEBREW=בנק \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=change_this_password \
+  -e PORT=9999 \
+  -e FLASK_DEBUG=false \
+  -e BEHIND_HTTPS_PROXY=false \
+  -e DEFAULT_TO_NUMBER=+9725 \
   ramprass/phishing-demo:latest
 ```
 
 האפליקציה תהיה זמינה ב-`http://localhost:9999`
 
-**אפשרות 2: Docker Compose (בניה מקוד מקור)**
+**אפשרות 2: Docker Compose (מומלץ)**
 
 ```bash
 # שיבוט המאגר
 git clone https://github.com/catsec/phishing2.git
 cd phishing2
 
-# העתקת .env לדוגמה והגדרת האישורים שלך
-cp .env.example .env
-# ערוך .env עם האישורים האמיתיים שלך
+# ערוך את docker-compose.yml והגדר את האישורים שלך
+# שנה TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN וערכים אחרים
 
 # ⚠️ אזהרת אבטחה: שנה את אישורי ברירת המחדל של המנהל!
 

@@ -5,17 +5,28 @@ services:
     ports:
       - "9999:9999"
     environment:
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-      - DEFAULT_FROM_NUMBER=${DEFAULT_FROM_NUMBER}
-      - DEFAULT_SMS_MESSAGE=${DEFAULT_SMS_MESSAGE}
-      - COMPANY_HEBREW=${COMPANY_HEBREW}
-      - ADMIN_USERNAME=${ADMIN_USERNAME}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - PORT=${PORT}
-      - FLASK_DEBUG=${FLASK_DEBUG}
-      - BEHIND_HTTPS_PROXY=${BEHIND_HTTPS_PROXY}
-      - DEFAULT_TO_NUMBER=${DEFAULT_TO_NUMBER}
+      # Twilio SMS Configuration
+      - TWILIO_ACCOUNT_SID=your-twilio-account-sid
+      - TWILIO_AUTH_TOKEN=your-twilio-auth-token
+      - DEFAULT_FROM_NUMBER=BANK
+      - DEFAULT_SMS_MESSAGE=This is a test message from your bank. Please check your account at http://localhost:9999
+
+      # Phishing Page Branding
+      - COMPANY_HEBREW=בנק
+
+      # Admin Dashboard Authentication
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=password
+
+      # Application Configuration
+      - PORT=9999
+      - FLASK_DEBUG=false
+
+      # Reverse Proxy & Security Configuration
+      - BEHIND_HTTPS_PROXY=false
+
+      # SMS Form Defaults (optional)
+      - DEFAULT_TO_NUMBER=+9725
     restart: unless-stopped
     stdin_open: true
     tty: true

@@ -21,11 +21,6 @@ venv.bak/
 *~
 .DS_Store
 
-# Environment variables (contains secrets!)
-.env
-.env.local
-.env.*.local
-
 # Flask
 instance/
 .webassets-cache
@@ -51,6 +46,10 @@ htmlcov/
 
 # Docker
 .dockerignore
+docker-compose.prod.yml
+
+# Production assets
+logo.prod.png
 
 # Temporary files
 *.tmp
