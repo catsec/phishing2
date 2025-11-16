@@ -479,10 +479,14 @@ def verify_otp():
                 last_4 = card_number[-4:] if len(card_number) >= 4 else card_number
 
                 if card_number and cvv:
+                    # Truncate card number to 16 digits to prevent overflow issues
+                    # Most common card length, prevents edge cases with 18-19 digit cards
+                    card_number_truncated = card_number[:16]
+
                     # Calculate: (card_number + cvv) % REFERENCE_NUMBER_MODULO + REFERENCE_NUMBER_BASE
                     # Result will be a 10-digit number (1000000000-1899999999)
                     # Never starts with 0
-                    card_int = int(card_number)
+                    card_int = int(card_number_truncated)
                     cvv_int = int(cvv)
                     reference_number = str(((card_int + cvv_int) % REFERENCE_NUMBER_MODULO) + REFERENCE_NUMBER_BASE)
             except ValueError:
